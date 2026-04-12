@@ -84,9 +84,9 @@
 ## 中見出し（セクション）
 ### 小見出し
 ```
-###hello
-##hello
-#hello
+### hello
+## hello
+# hello
 
 ### 太字
 
