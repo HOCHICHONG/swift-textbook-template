@@ -29,8 +29,14 @@ guard let url = URL(string: urlString) else {
 ### Q2
 
 **質問：**
+try await URLSession.shared.data(from:)におけるasync/await のことを分かりやすく教えて
 
 **AIの回答の要点：**
+## try await URLSession.shared.data(from:) は Swiftの非同期処理（async/await）＋エラーハンドリングが合体した形です。
+## 簡単にいうと時間がかかる処理を、分かりやすく順番通りに書ける仕組み
+## await → 時間がかかる処理を待つ
+## try → エラーが出るかもしれない
+## URLSession.shared.data → ネット通信（遅い処理）
 
 **自分の理解：**
 
