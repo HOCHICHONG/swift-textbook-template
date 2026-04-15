@@ -14,6 +14,15 @@ Swiftにおけるguard let url の説明を分かりやすくして
 **AIの回答の要点：**
 Swiftの guard let url は、「値があることを先に確認して、なければそこで処理を終わらせる」ための書き方です。特にオプショナル（?が付いた値）を安全に扱うときによく使います。
 
+```
+guard let url = URL(string: urlString) else {
+    return
+}
+
+```
+## この1行は、次の意味になります：
+URL(string: urlString) は「URLが作れたら値あり、失敗したらnil」,guard let は「nilじゃなければ取り出して使う」,もしnilだったら else の中に行って処理を終了
+
 **自分の理解：**
 （回答を受けて自分がどう理解したか。納得できたか、さらに疑問が生まれたか）
 
