@@ -35,8 +35,23 @@ try await URLSession.shared.data(from:)におけるasync/await のことを分�
 ## try await URLSession.shared.data(from:) は Swiftの非同期処理（async/await）＋エラーハンドリングが合体した形です。
 ## 簡単にいうと時間がかかる処理を、分かりやすく順番通りに書ける仕組み
 ## await → 時間がかかる処理を待つ
+## async → awaitを使うための宣言
 ## try → エラーが出るかもしれない
 ## URLSession.shared.data → ネット通信（遅い処理）
+## つまり「失敗するかもしれない時間のかかる処理を待つ」
+```
+func fetch() async {
+    do {
+        let (data, response) = try await URLSession.shared.data(from: url)
+        print(data)
+    } catch {
+        print("通信エラー: \(error)")
+    }
+}
+```
+## await → 通信が終わるのを待つ
+## 成功 → dataが返る
+## 失敗 → catchへ
 
 **自分の理解：**
 
