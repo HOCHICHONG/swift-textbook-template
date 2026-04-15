@@ -21,10 +21,10 @@ guard let url = URL(string: urlString) else {
 
 ```
 ## この1行は、次の意味になります：
-URL(string: urlString) は「URLが作れたら値あり、失敗したらnil」,guard let は「nilじゃなければ取り出して使う」,もしnilだったら else の中に行って処理を終了
+## URL(string: urlString) は「URLが作れたら値あり、失敗したらnil」,guard let は「nilじゃなければ取り出して使う」,もしnilだったら else の中に行って処理を終了
 
 **自分の理解：**
-guard letというのは門番みたいなもので、値がnilかどうかをチェックし、nilだったら即終了、nilじゃなかったら値を取り出せる。意味としては、try catchとthrowに仕組みに似ているかもしれません。
+## guard letというのは門番みたいなもので、値がnilかどうかをチェックし、nilだったら即終了、nilじゃなかったら値を取り出せる。意味としては、try catchとthrowの仕組みに似ているかもしれません。
 
 ### Q2
 
