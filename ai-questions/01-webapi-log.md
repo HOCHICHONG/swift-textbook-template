@@ -24,7 +24,7 @@ guard let url = URL(string: urlString) else {
 URL(string: urlString) は「URLが作れたら値あり、失敗したらnil」,guard let は「nilじゃなければ取り出して使う」,もしnilだったら else の中に行って処理を終了
 
 **自分の理解：**
-（回答を受けて自分がどう理解したか。納得できたか、さらに疑問が生まれたか）
+guard letというのは門番みたいなもので、値がnilかどうかをチェックし、nilだったら即終了、nilじゃなかったら値を取り出せる。意味としては、try catchとthrowに仕組みに似ているかもしれません。
 
 ### Q2
 
