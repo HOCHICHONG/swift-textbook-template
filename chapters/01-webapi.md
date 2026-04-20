@@ -343,10 +343,10 @@ struct Song: Codable, Identifiable {
 var id: Int { trackId }
 ```
 ## 「この曲のIDは trackId を使います」,Identifiable をつけるとSwiftUIが「どのデータがどれか」を判断できる
-
+## 「毎回 trackId を返す」ようにする
 **もしこう書かなかったら：**
 ## もしCodableを書かなかったら、JSON ⇄ struct の自動変換ができなくなる。
-##
+
 
 ---
 
