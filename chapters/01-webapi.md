@@ -353,12 +353,207 @@ var id: Int { trackId }
 ### API通信の処理
 
 ```swift
-// 該当部分のコードを抜粋して貼る
+@Observable
+class MusicSearchViewModel {
+    var songs: [Song] = []
+    var searchText: String = ""
+    var isLoading: Bool = false
+    var errorMessage: String?
+
+    enum SearchError: LocalizedError {
+        case invalidURL
+        case networkError(Error)
+        case decodingError(Error)
+        case noResults
+
+        var errorDescription: String? {
+            switch self {
+            case .invalidURL:
+                return "検索URLの作成に失敗しました"
+            case .networkError(let error):
+                return "通信エラー: \(error.localizedDescription)"
+            case .decodingError:
+                return "データの読み取りに失敗しました"
+            case .noResults:
+                return "検索結果が見つかりませんでした"
+            }
+        }
+    }
+
+    func searchMusic() async {
+        guard !searchText.trimmingCharacters(in: .whitespaces).isEmpty else { return }
+
+        guard let encodedText = searchText.addingPercentEncoding(
+            withAllowedCharacters: .urlQueryAllowed
+        ) else {
+            errorMessage = SearchError.invalidURL.errorDescription
+            return
+        }
+
+        let urlString = "https://itunes.apple.com/search?term=\(encodedText)&media=music&country=jp&limit=25"
+
+        guard let url = URL(string: urlString) else {
+            errorMessage = SearchError.invalidURL.errorDescription
+            return
+        }
+
+        isLoading = true
+        errorMessage = nil
+
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            let response = try JSONDecoder().decode(SearchResponse.self, from: data)
+
+            if response.results.isEmpty {
+                errorMessage = SearchError.noResults.errorDescription
+                songs = []
+            } else {
+                songs = response.results
+            }
+        } catch let error as DecodingError {
+            errorMessage = SearchError.decodingError(error).errorDescription
+            songs = []
+        } catch {
+            errorMessage = SearchError.networkError(error).errorDescription
+            songs = []
+        }
+
+        isLoading = false
+    }
+}
 ```
 
 **何をしているか：**
+## 検索文字をもとに音楽をAPIから取得して、画面に表示するための司令塔
 
 **なぜこう書くのか：**
+#@Observable の意味
+```
+@Observable
+class MusicSearchViewModel {
+    var songs: [Song] = []
+    var searchText: String = ""
+    var isLoading: Bool = false
+    var errorMessage: String?
+```
+## このクラスの値が変わると：画面が自動更新される（SwiftUIの仕組み）
+## それぞれの役割
+### songs → 検索結果（リスト表示）
+### searchText → ユーザーが入力した文字
+### isLoading → ローディング表示用
+### errorMessage → エラー表示用
+
+
+#エラーの定義
+```
+ enum SearchError: LocalizedError {
+        case invalidURL
+        case networkError(Error)
+        case decodingError(Error)
+        case noResults
+
+        var errorDescription: String? {
+            switch self {
+            case .invalidURL:
+                return "検索URLの作成に失敗しました"
+            case .networkError(let error):
+                return "通信エラー: \(error.localizedDescription)"
+            case .decodingError:
+                return "データの読み取りに失敗しました"
+            case .noResults:
+                return "検索結果が見つかりませんでした"
+            }
+        }
+    }
+```
+## エラーの種類をまとめて管理
+### 種類
+### URLが作れない
+### 通信失敗
+### JSON変換失敗
+### 結果なし
+
+## エラーメッセージの表示
+```
+        var errorDescription: String? {
+            switch self {
+            case .invalidURL:
+                return "検索URLの作成に失敗しました"
+            case .networkError(let error):
+                return "通信エラー: \(error.localizedDescription)"
+            case .decodingError:
+                return "データの読み取りに失敗しました"
+            case .noResults:
+                return "検索結果が見つかりませんでした"
+            }
+        }
+```
+
+## メイン処理
+```
+func searchMusic() async {
+        guard !searchText.trimmingCharacters(in: .whitespaces).isEmpty else { return }
+
+        guard let encodedText = searchText.addingPercentEncoding(
+            withAllowedCharacters: .urlQueryAllowed
+        ) else {
+            errorMessage = SearchError.invalidURL.errorDescription
+            return
+        }
+
+        let urlString = "https://itunes.apple.com/search?term=\(encodedText)&media=music&country=jp&limit=25"
+
+        guard let url = URL(string: urlString) else {
+            errorMessage = SearchError.invalidURL.errorDescription
+            return
+        }
+
+        isLoading = true
+        errorMessage = nil
+
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            let response = try JSONDecoder().decode(SearchResponse.self, from: data)
+
+            if response.results.isEmpty {
+                errorMessage = SearchError.noResults.errorDescription
+                songs = []
+            } else {
+                songs = response.results
+            }
+        } catch let error as DecodingError {
+            errorMessage = SearchError.decodingError(error).errorDescription
+            songs = []
+        } catch {
+            errorMessage = SearchError.networkError(error).errorDescription
+            songs = []
+        }
+
+        isLoading = false
+    }
+}
+
+// MARK: - メインビュー
+
+struct ContentView: View {
+    @State private var viewModel = MusicSearchViewModel()
+
+    var body: some View {
+        NavigationStack {
+            VStack(spacing: 0) {
+                searchBar
+
+                if let errorMessage = viewModel.errorMessage {
+                    ErrorBanner(message: errorMessage)
+                }
+
+                contentArea
+            }
+            .navigationTitle("Music Search")
+        }
+```
+
+
 
 **もしこう書かなかったら：**
 
