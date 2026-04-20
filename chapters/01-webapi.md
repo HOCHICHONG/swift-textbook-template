@@ -533,6 +533,31 @@ func searchMusic() async {
     }
 }
 
+
+```
+## 動作：検索ボタンが押されたときに実行される
+```
+guard !searchText.trimmingCharacters(in: .whitespaces).isEmpty else { return }
+```
+## 空文字での検索を防ぐ
+
+
+## addingPercentEncodingで日本語やスペースをURL用に変換、例えば宇多田ヒカル → %E5%AE%87%E5%A4%9A...
+
+##通信
+```
+let (data, _) = try await URLSession.shared.data(from: url)
+```
+## サーバーにリクエスト送る、終わるまで待つ（await）
+
+
+**もしこう書かなかったら：**
+
+---
+
+### ビューの構成
+
+```swift
 // MARK: - メインビュー
 
 struct ContentView: View {
@@ -551,17 +576,8 @@ struct ContentView: View {
             }
             .navigationTitle("Music Search")
         }
-```
+    }
 
-
-
-**もしこう書かなかったら：**
-
----
-
-### ビューの構成
-
-```swift
     // MARK: - 検索バー
 
     private var searchBar: some View {
