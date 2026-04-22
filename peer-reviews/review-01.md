@@ -1,8 +1,8 @@
 # ピアレビュー記録：第1回
 
-> レビュー実施日：YYYY-MM-DD
-> レビュー対象者：（相手の名前）
-> 対象の章：第○章
+> レビュー実施日：2026-04-22
+> レビュー対象者：田中吾錬
+> 対象の章：第1章
 
 ## 良かった点
 
@@ -27,4 +27,4 @@
 
 （GitHubのIssueとして投稿したフィードバックのURL）
 
-https://github.com/...
+[https://github.com/...](https://github.com/ArenTanaka/swift-textbook-template/issues/1)
