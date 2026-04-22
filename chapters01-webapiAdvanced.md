@@ -280,3 +280,29 @@ struct ErrorBanner: View {
 
 ## MVVMパターンとは?
 ### UIとロジックを明確に分離し、テスト容易性とメンテナンス性を高めるデザインパターンです。View（画面）はUIのみを管理し、ViewModel（データバインディング）がロジックと状態管理を行い、Model（データ）は純粋なデータ構造を保持します。
+
+## エラーハンドリングとは?
+### 通信やファイル操作など想定外の事象が発生した際に、アプリを異常終了（クラッシュ）させず、安全に対処・回復させる仕組みです。
+### 例：
+```
+enum SearchError: LocalizedError {
+        case invalidURL
+        case networkError(Error)
+        case decodingError(Error)
+        case noResults
+
+        var errorDescription: String? {
+            switch self {
+            case .invalidURL:
+                return "検索URLの作成に失敗しました"
+            case .networkError(let error):
+                return "通信エラー: \(error.localizedDescription)"
+            case .decodingError:
+                return "データの読み取りに失敗しました"
+            case .noResults:
+                return "検索結果が見つかりませんでした"
+            }
+        }
+    }
+```
+### Errorプロトコル: エラーの種類を定義する（enumで使用）
