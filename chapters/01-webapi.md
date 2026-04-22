@@ -299,7 +299,7 @@ struct ErrorBanner: View {
 
 ## コードの詳細解説
 
-### データモデル（Codable構造体）
+## データモデル（Codable構造体）
 
 ```swift
 struct SearchResponse: Codable {
@@ -334,11 +334,11 @@ struct Song: Codable, Identifiable {
 ## このコードは「APIから取得した音楽データを、アプリで扱いやすい形に変換する設計」です。
 
 **なぜこう書くのか：**
-# Codableの意味 : SON ⇄ Swiftの変換を自動でやってくれる
-## JSON → struct に変換（decode）
-## struct → JSON に変換（encode）
+## Codableの意味 : SON ⇄ Swiftの変換を自動でやってくれる
+## ・JSON → struct に変換（decode）
+## ・struct → JSON に変換（encode）
 
-# Identifiable + id の意味
+## Identifiable + id の意味
 ```
 var id: Int { trackId }
 ```
@@ -438,10 +438,10 @@ class MusicSearchViewModel {
 ```
 ## このクラスの値が変わると：画面が自動更新される（SwiftUIの仕組み）
 ## それぞれの役割
-### songs → 検索結果（リスト表示）
-### searchText → ユーザーが入力した文字
-### isLoading → ローディング表示用
-### errorMessage → エラー表示用
+### ・songs → 検索結果（リスト表示）
+### ・searchText → ユーザーが入力した文字
+### ・isLoading → ローディング表示用
+### ・errorMessage → エラー表示用
 
 
 #エラーの定義
