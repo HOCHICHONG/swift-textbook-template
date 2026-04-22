@@ -726,9 +726,9 @@ struct SongDetailView: View {
 
 **なぜこう書くのか：**
 
-## それそれのエリアパーツを分けることでコードが管理しやすくなる
-## .disabled(viewModel.searchText.isEmpty || viewModel.isLoading)で一時的にボタンを無効化によって連打を防止
-## awaitで検索時の非同期処理を行う
+## -> それそれのエリアパーツを分けることでコードが管理しやすくなる
+## -> .disabled(viewModel.searchText.isEmpty || viewModel.isLoading)で一時的にボタンを無効化によって連打を防止
+## -> awaitで検索時の非同期処理を行う
 
 **もしこう書かなかったら：**
 
