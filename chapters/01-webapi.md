@@ -334,19 +334,22 @@ struct Song: Codable, Identifiable {
 ## このコードは「APIから取得した音楽データを、アプリで扱いやすい形に変換する設計」です。
 
 **なぜこう書くのか：**
-## Codableの意味 : SON ⇄ Swiftの変換を自動でやってくれる
-## ・JSON → struct に変換（decode）
-## ・struct → JSON に変換（encode）
+### Codableの意味 : SON ⇄ Swiftの変換を自動でやってくれる
+ ・JSON → struct に変換（decode）
+ 
+ ・struct → JSON に変換（encode）
 
 ## Identifiable + id の意味
 ```
 var id: Int { trackId }
 ```
-## 「この曲のIDは trackId を使います」,Identifiable をつけるとSwiftUIが「どのデータがどれか」を判断できる
-## 「毎回 trackId を返す」ようにする
-**もしこう書かなかったら：**
-## もしCodableを書かなかったら、JSON ⇄ struct の自動変換ができなくなる。
+「この曲のIDは trackId を使います」,Identifiable をつけるとSwiftUIが「どのデータがどれか」を判断できる
 
+「毎回 trackId を返す」ようにする
+
+**もしこう書かなかったら：**
+
+もしCodableを書かなかったら、JSON ⇄ struct の自動変換ができなくなる。
 
 ---
 
@@ -424,7 +427,7 @@ class MusicSearchViewModel {
 ```
 
 **何をしているか：**
-## 検索文字をもとに音楽をAPIから取得して、画面に表示するための司令塔
+検索文字をもとに音楽をAPIから取得して、画面に表示するための司令塔
 
 **なぜこう書くのか：**
 #@Observable の意味
@@ -436,13 +439,16 @@ class MusicSearchViewModel {
     var isLoading: Bool = false
     var errorMessage: String?
 ```
-## このクラスの値が変わると：画面が自動更新される（SwiftUIの仕組み）
-## それぞれの役割
-### ・songs → 検索結果（リスト表示）
-### ・searchText → ユーザーが入力した文字
-### ・isLoading → ローディング表示用
-### ・errorMessage → エラー表示用
-
+ このクラスの値が変わると：画面が自動更新される（SwiftUIの仕組み）
+ それぞれの役割
+ 
+ ・songs → 検索結果（リスト表示）
+ 
+ ・searchText → ユーザーが入力した文字
+ 
+ ・isLoading → ローディング表示用
+ 
+ ・errorMessage → エラー表示用
 
 #エラーの定義
 ```
@@ -466,12 +472,17 @@ class MusicSearchViewModel {
         }
     }
 ```
-## エラーの種類をまとめて管理
-### ・種類
-### ・URLが作れない
-### ・通信失敗
-### ・JSON変換失敗
-### ・結果なし
+### エラーの種類をまとめて管理
+
+・種類
+
+・URLが作れない
+
+・通信失敗
+
+・JSON変換失敗
+
+・結果なし
 
 ## エラーメッセージの表示
 ```
@@ -535,14 +546,13 @@ func searchMusic() async {
 
 
 ```
-## 動作：検索ボタンが押されたときに実行される
+### 動作：検索ボタンが押されたときに実行される
 ```
 guard !searchText.trimmingCharacters(in: .whitespaces).isEmpty else { return }
 ```
-## 空文字での検索を防ぐ
+空文字での検索を防ぐ
 
-
-## addingPercentEncodingで日本語やスペースをURL用に変換、例えば宇多田ヒカル → %E5%AE%87%E5%A4%9A...
+addingPercentEncodingで日本語やスペースをURL用に変換、例えば宇多田ヒカル → %E5%AE%87%E5%A4%9A...
 
 ##通信
 ```
@@ -552,24 +562,30 @@ let (data, _) = try await URLSession.shared.data(from: url)
 
 
 **もしこう書かなかったら：**
-## -> guardでの入力チェックがない場合:
-## ・空文字でAPIリクエストが飛ぶ
-## ・無駄な通信
-## ・意図しない検索結果（全部出ることもある）
+### -> guardでの入力チェックがない場合:
 
-## -> URLエンコードしていない場合
-## 日本語・スペースでURLが壊れる
+・空文字でAPIリクエストが飛ぶ
 
-## -> URLのguardチェックがない
-## ・不正なURLでも進んでしまう
-## ・クラッシュの可能性
+・無駄な通信
 
-## -> isLoading管理がない
-### ・ローディング表示が出ない
-### ・ボタン連打される
+・意図しない検索結果（全部出ることもある）
 
-## -> エラーをenumで管理していない
-## ・エラー文がバラバラになる
+### -> URLエンコードしていない場合
+
+日本語・スペースでURLが壊れる
+
+### -> URLのguardチェックがない
+・不正なURLでも進んでしまう
+
+・クラッシュの可能性
+
+### -> isLoading管理がない
+・ローディング表示が出ない
+
+・ボタン連打される
+
+### -> エラーをenumで管理していない
+ ・エラー文がバラバラになる
 
 ---
 
@@ -722,19 +738,22 @@ struct SongDetailView: View {
 ```
 
 **何をしているか：**
-## ユーザーの操作 → 状態更新 → UIが自動で変わる仕組み　検索成功 or エラー
+ユーザーの操作 → 状態更新 → UIが自動で変わる仕組み　検索成功 or エラー
 
 **なぜこう書くのか：**
+-> それそれのエリアパーツを分けることでコードが管理しやすくなる
 
-## -> それそれのエリアパーツを分けることでコードが管理しやすくなる
-## -> .disabled(viewModel.searchText.isEmpty || viewModel.isLoading)で一時的にボタンを無効化によって連打を防止
-## -> awaitで検索時の非同期処理を行う
+-> .disabled(viewModel.searchText.isEmpty || viewModel.isLoading)で一時的にボタンを無効化によって連打を防止
+
+-> awaitで検索時の非同期処理を行う
 
 **もしこう書かなかったら：**
 
-## コードがぐじゃぐじゃになってメンテナンスと管理が大変
-## .disabledを使わないとボタン連打でエラーが起こりやすくなる
-## 非同期処理しないと画面フリーズ、ボタン押せないなどの問題が発生するかも
+コードがぐじゃぐじゃになってメンテナンスと管理が大変
+
+.disabledを使わないとボタン連打でエラーが起こりやすくなる
+
+非同期処理しないと画面フリーズ、ボタン押せないなどの問題が発生するかも
 
 
 ---
