@@ -233,12 +233,51 @@ struct LandmarkCard: View {
 
 （アプリの動作を自分の言葉で説明する。スクリーンショットを貼ってもよい。）
 
+地図の上のマーカーで東京の観光スポットの簡単な情報表示できるアプリです。
+
 ## コードの詳細解説
 
 ### データモデル（ランドマーク構造体）
 
 ```swift
-// 該当部分のコードを抜粋して貼る
+struct Landmark: Identifiable, Hashable {
+    let id = UUID()
+    let name: String
+    let description: String
+    let coordinate: CLLocationCoordinate2D
+    let category: Category
+
+    static func == (lhs: Landmark, rhs: Landmark) -> Bool {
+        lhs.id == rhs.id
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+
+    enum Category: String, CaseIterable {
+        case temple = "寺社"
+        case tower = "タワー"
+        case park = "公園"
+
+        var iconName: String {
+            switch self {
+            case .temple: return "building.columns"
+            case .tower: return "antenna.radiowaves.left.and.right"
+            case .park: return "leaf"
+            }
+        }
+
+        var color: Color {
+            switch self {
+            case .temple: return .red
+            case .tower: return .blue
+            case .park: return .green
+            }
+        }
+    }
+}
+
 ```
 
 **何をしているか：**
