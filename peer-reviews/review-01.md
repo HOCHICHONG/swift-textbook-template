@@ -29,4 +29,6 @@
 
 （GitHubのIssueとして投稿したフィードバックのURL）
 
+https://github.com/HOCHICHONG/swift-textbook-template/issues
+
 
