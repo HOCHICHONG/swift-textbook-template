@@ -65,8 +65,11 @@ SwiftUI内部の差分更新
 まず hash値 を比較　→ 必要なら == を使う
 という高速化をしています。
 
+ズレたらSetやDictionary が壊れる。
+
 
 **自分の理解：**
+hash化を使って高速にidとlandmarkを識別することでSetやDictionaryで使えるようにする、壊れることも防ぐ
 
 ### Q3
 
