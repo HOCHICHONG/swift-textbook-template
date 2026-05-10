@@ -493,9 +493,11 @@ Map更新
 
 **なぜこう書くのか：**
 
-.ultraThinMaterial は背景向き、Map上UIにかなり相性良い。
+###.ultraThinMaterial は背景向き
 
-理由として地図を少し透かせること
+→ Map上UIにかなり相性良い。
+
+→ 理由として地図を少し透かせること
 
 
 **もしこう書かなかったら：**
@@ -579,7 +581,7 @@ Map更新
 ```
 ForEach(Landmark.Category.allCases, id: \.self)
 ```
-なぜid: \.self必要？
+### なぜid: \.self必要？
 
 Category は Identifiable じゃないから。
 
