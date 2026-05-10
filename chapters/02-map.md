@@ -422,7 +422,21 @@ State を他Viewと共有
 
 **もしこう書かなかったら：**
 
+### .tag(landmark)を付けないとMarker選択が動かない。
 
+なぜなら、Mapは：を tagで識別してるからです。
+
+流れ : Marker　→ tag(landmark)　→ selectedLandmark に代入
+
+### @State を付けないとUI更新されない。
+
+Landmark の equality/hash を id基準に統一しないと：
+
+・Set壊れる
+
+・selection壊れる
+
+・SwiftUI差分壊れる
 
 ---
 
