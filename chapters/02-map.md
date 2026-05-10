@@ -337,6 +337,53 @@ Dictionaryも：
 
 ```swift
 // 該当部分のコードを抜粋して貼る
+
+struct ContentView: View {
+    @State private var cameraPosition: MapCameraPosition = .region(
+        MKCoordinateRegion(
+            center: CLLocationCoordinate2D(latitude: 35.6812, longitude: 139.7671),
+            span: MKCoordinateSpan(latitudeDelta: 0.08, longitudeDelta: 0.08)
+        )
+    )
+    @State private var selectedLandmark: Landmark?
+    @State private var selectedCategories: Set<Landmark.Category> = Set(Landmark.Category.allCases)
+
+    var filteredLandmarks: [Landmark] {
+        Landmark.sampleData.filter { selectedCategories.contains($0.category) }
+    }
+
+    var body: some View {
+        ZStack(alignment: .bottom) {
+            // 地図
+            Map(position: $cameraPosition, selection: $selectedLandmark) {
+                ForEach(filteredLandmarks) { landmark in
+                    Marker(
+                        landmark.name,
+                        systemImage: landmark.category.iconName,
+                        coordinate: landmark.coordinate
+                    )
+                    .tint(landmark.category.color)
+                    .tag(landmark)
+                }
+            }
+            .mapStyle(.standard(elevation: .realistic))
+
+            // カテゴリフィルター
+            VStack(spacing: 8) {
+                if let landmark = selectedLandmark {
+                    LandmarkCard(landmark: landmark)
+                        .transition(.move(edge: .bottom))
+                }
+
+                CategoryFilter(selectedCategories: $selectedCategories)
+            }
+            .padding()
+        }
+        .onMapCameraChange { context in
+            // 地図の操作に応じた処理を追加できる
+        }
+    }
+}
 ```
 
 **何をしているか：**
@@ -351,6 +398,70 @@ Dictionaryも：
 
 ```swift
 // 該当部分のコードを抜粋して貼る
+struct CategoryFilter: View {
+    @Binding var selectedCategories: Set<Landmark.Category>
+
+    var body: some View {
+        HStack(spacing: 8) {
+            ForEach(Landmark.Category.allCases, id: \.self) { category in
+                Button {
+                    if selectedCategories.contains(category) {
+                        selectedCategories.remove(category)
+                    } else {
+                        selectedCategories.insert(category)
+                    }
+                } label: {
+                    HStack(spacing: 4) {
+                        Image(systemName: category.iconName)
+                        Text(category.rawValue)
+                    }
+                    .font(.caption)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 6)
+                    .background(
+                        selectedCategories.contains(category)
+                            ? category.color.opacity(0.2)
+                            : Color.gray.opacity(0.1)
+                    )
+                    .foregroundStyle(
+                        selectedCategories.contains(category)
+                            ? category.color
+                            : .gray
+                    )
+                    .clipShape(Capsule())
+                }
+            }
+        }
+        .padding(8)
+        .background(.ultraThinMaterial)
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+    }
+}
+
+// MARK: - ランドマーク詳細カード
+
+struct LandmarkCard: View {
+    let landmark: Landmark
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack {
+                Image(systemName: landmark.category.iconName)
+                    .foregroundStyle(landmark.category.color)
+                Text(landmark.name)
+                    .font(.headline)
+                Spacer()
+            }
+            Text(landmark.description)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+        .padding()
+        .background(.ultraThinMaterial)
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+}
+
 ```
 
 **何をしているか：**
