@@ -75,9 +75,51 @@ hash化を使って高速にidとlandmarkを識別することでSetやDictionar
 
 **質問：**
 
+Bindingについて分かりやすく教えて
+
 **AIの回答の要点：**
 
+「値を共有して、変更を同期する仕組み」または　同じメモを共有
+
+例：
+```
+struct ParentView: View {
+    @State private var isOn = false
+
+    var body: some View {
+        ChildView(isOn: $isOn)
+    }
+}
+```
+
+```
+struct ChildView: View {
+    @Binding var isOn: Bool
+
+    var body: some View {
+        Toggle("Switch", isOn: $isOn)
+    }
+}
+```
+## 動き
+Toggle変更
+
+↓
+
+isOn更新
+
+↓
+
+親ViewのState更新
+
+↓
+
+全UI更新
+
+
 **自分の理解：**
+
+親のStateを子Viewから操作する仕組み
 
 （質問は何個でも追加してください。多ければ多いほど良いです。）
 
