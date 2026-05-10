@@ -444,6 +444,69 @@ Landmark の equality/hash を id基準に統一しないと：
 
 ```swift
 // 該当部分のコードを抜粋して貼る
+
+struct LandmarkCard: View {
+    let landmark: Landmark
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack {
+                Image(systemName: landmark.category.iconName)
+                    .foregroundStyle(landmark.category.color)
+                Text(landmark.name)
+                    .font(.headline)
+                Spacer()
+            }
+            Text(landmark.description)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+        .padding()
+        .background(.ultraThinMaterial)
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+}
+
+```
+
+**何をしているか：**
+
+このコードは、
+
+LandmarkCard → 選択中スポットの詳細カードを作っています
+
+流れ:
+
+CategoryFilter
+
+↓
+
+selectedCategories変更
+
+↓
+
+ContentView更新
+
+↓
+
+Map更新
+
+**なぜこう書くのか：**
+
+.ultraThinMaterial は背景向き、Map上UIにかなり相性良い。
+
+理由として地図を少し透かせること
+
+
+**もしこう書かなかったら：**
+
+---
+
+### フィルター機能
+
+```swift
+// 該当部分のコードを抜粋して貼る
+
 struct CategoryFilter: View {
     @Binding var selectedCategories: Set<Landmark.Category>
 
@@ -484,51 +547,53 @@ struct CategoryFilter: View {
     }
 }
 
-// MARK: - ランドマーク詳細カード
-
-struct LandmarkCard: View {
-    let landmark: Landmark
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            HStack {
-                Image(systemName: landmark.category.iconName)
-                    .foregroundStyle(landmark.category.color)
-                Text(landmark.name)
-                    .font(.headline)
-                Spacer()
-            }
-            Text(landmark.description)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-        }
-        .padding()
-        .background(.ultraThinMaterial)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
-    }
-}
-
 ```
 
 **何をしているか：**
 
+CategoryFilter → カテゴリ選択UI
+
+流れ:
+
+CategoryFilter
+
+↓
+
+selectedCategories変更
+
+↓
+
+ContentView更新
+
+↓
+
+Map更新
+
 **なぜこう書くのか：**
 
-**もしこう書かなかったら：**
-
----
-
-### フィルター機能
-
-```swift
-// 該当部分のコードを抜粋して貼る
 ```
+ @Binding var selectedCategories: Set<Landmark.Category>
+```
+こうして書くと状態を共有し、変化がSetで高速に管理し対応できる
 
-**何をしているか：**
+```
+ForEach(Landmark.Category.allCases, id: \.self)
+```
+なぜid: \.self必要？
 
-**なぜこう書くのか：**
+Category は Identifiable じゃないから。
+
+\.self の意味は値そのものを識別子にする
+
 
 **もしこう書かなかったら：**
+
+@Binding var selectedCategoriesに@Bindingをつけないと、変更しても親に反映されない、場所の変更が表示できなくなる。
+
+Setを使わないでArrayを使ってしまったら、要素が重複可能になり、管理が大変で高速に管理できなくなる。
+
+id: \.selfを書かないと、ForEach がCategoryを識別できない
+
 
 ---
 
