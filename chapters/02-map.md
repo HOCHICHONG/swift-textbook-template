@@ -286,6 +286,7 @@ struct Landmark: Identifiable, Hashable {
 
 観光地（ランドマーク）を表すデータモデルを定義しています。Swift（特にSwiftUIやMap系アプリ）でよく使われる形です。
 
+
 **なぜこう書くのか：**
 （別の書き方ではなく、この書き方が選ばれている理由を説明する）
 
@@ -296,6 +297,7 @@ struct Landmark: Identifiable, Hashable {
 .資料の管理がしやすい　→ DBやAPIに連携しやすくなる
 
 でもアプリを再起動すると変わる可能性あり
+
 
 なぜhashが必要？
 
