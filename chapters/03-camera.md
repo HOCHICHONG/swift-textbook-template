@@ -281,7 +281,7 @@ struct ContentView: View {
 ```
 .onChange(of: selectedItem)
 ```
-onChangeを使うことによって変化の監視を行っている
+onChangeを使うことによって値の変化を検知を行っている
 
 なぜ非同期処理を行っている？
 
