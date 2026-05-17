@@ -420,9 +420,90 @@ struct CameraView: UIViewControllerRepresentable {
 
 **何をしているか：**
 
+ここは 「SwiftUIでUIKitのカメラ機能を使うための橋渡し」 をしています。
+
+・SwiftUIだけでは直接カメラを開けないので、UIKitのカメラ機能を借りている
+
+・iPhoneの標準カメラを開く機能は主にUIKitのUIImagePickerControllerが担当しています。
+
 **なぜこう書くのか：**
 
+1.SwiftUIとUIKitをつなぐ役としてUIViewControllerRepresentableが必要。
+
+流れそして：
+```
+SwiftUIでCameraViewを表示
+      ↓
+UIKitのカメラを作る
+      ↓
+ユーザーが撮影
+      ↓
+撮影した画像を受け取る
+      ↓
+ContentViewに渡す
+      ↓
+画面更新
+```
+```
+struct ○○: UIViewControllerRepresentable
+```
+ここにおいて「UIKitのViewControllerをSwiftUIに変換します」という意味です。
+
+2.dismiss
+```
+@Environment(\.dismiss) private var dismiss
+```
+この画面を閉じるための機能
+
+3.picker
+```
+let picker = UIImagePickerController()
+
+picker.sourceType = .camera
+```
+これは
+UIImagePickerControllerを作っています。
+
+これはApple標準のカメラ、写真選択用画面です。そしてpickerをカメラモードにする
+
+4.delegate
+```
+picker.delegate = context.coordinator
+```
+これは撮影が終わったら誰に知らせるかを設定しています。
+
+delegate は「イベントを受け取る担当」です。かなりUIKitでよく使います。
+
+
+5.makeCoordinator
+```
+func makeCoordinator() -> Coordinator {
+    Coordinator(self)
+}
+```
+これはイベントを受け取る担当を作る処理です。
+
+役割：
+
+・撮影完了を受け取る
+
+・キャンセルを受け取る
+
+・画像を渡す
+
+・画面を閉じる
+
+
+
 **もしこう書かなかったら：**
+
+1,SwiftUIとUIKitをつなぐ役としてUIViewControllerRepresentableが必要。
+
+書かなかったらカメラ機能を使えない
+
+2.picker作らないとカメラモードに変換できない
+
+3.@Bindingを書かないと親画面（ContentView）とデータを共有することができない　→ ContentViewにも反映されない
 
 ---
 
