@@ -536,9 +536,72 @@ class Coordinator: NSObject, UIImagePickerControllerDelegate, UINavigationContro
 
 **何をしているか：**
 
+ここは 「カメラで起きたイベントを受け取って処理する係」 です。
+
+「カメラが『撮れたよ』『キャンセルされたよ』と知らせてきたときに対応する受付係」
+
+流れとして：
+```
+ユーザーがカメラを開く
+     ↓
+写真を撮る / キャンセルする
+     ↓
+UIImagePickerController が通知する
+     ↓
+Coordinator が受け取る
+     ↓
+ContentView に結果を渡す
+     ↓
+カメラ画面を閉じる
+```
+
 **なぜこう書くのか：**
 
+1.NSObject
+
+これはUIKitでよく必要になる親クラスです。Appleの古い仕組み（Objective-C系）と連携するために必要。
+
+2.UINavigationControllerDelegate
+
+これもUIImagePickerControllerが必要とするお約束。
+
+細かくはナビゲーション管理用ですが、実際はUIImagePickerControllerを使うならセットで書くことが多いです。
+
+3.func imagePickerController
+```
+func imagePickerController(
+    _ picker: UIImagePickerController,
+    didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]
+)
+```
+写真の撮影が終わったとき自動で呼ばれる関数
+
+infoは撮影結果の情報が入った辞書です
+
+中には例えば：
+
+・元画像
+
+・編集後画像
+
+・メタデータ
+
+などが入っています。
+
+4.info[.originalImage]
+```
+if let image = info[.originalImage] as? UIImage
+```
+辞書から撮影した元画像を取り出す
+
+as? UIImage →　「UIImage型として変換できる？」
+
+
 **もしこう書かなかったら：**
+
+1.NSObjectを書かないとdelegateとして使えないことがあります。かなり「お約束」です。
+
+2.if let 使わなければ画像がUIImage型として変換できなくてアプリが落ちる
 
 ---
 
