@@ -353,9 +353,44 @@ CameraView表示
 
 **何をしているか：**
 
+この部分は、「選ばれた写真を実際に読み込んで、画面に表示できる形に変換する」処理です。
+
 **なぜこう書くのか：**
 
+1.PhotosPickerItem?が重要
+
+```
+func loadImage(from item: PhotosPickerItem?) async
+```
+
+? があるので、
+
+・写真がある
+
+・写真がない（nil）
+
+両方の可能性があります。
+
+2.asyncが必要
+
+時間のかかる処理をする関数、写真の読み込みはすぐ終わらないことがあるので、非同期で処理します。
+
+```
+try await item.loadTransferable(...)
+```
+
+3.guard letが必要
+
+```
+guard let item = item else { return }
+```
+item が nil なら処理をやめる、クラッシュを防ぐ
+
 **もしこう書かなかったら：**
+
+1.guard letが書かなかったら、処理が始まる前にエラーの発生が防ぐことができなくなる
+
+2.PhotosPickerItem?に?を付けないとデータに空のデータがはいてしまいアプリがクラッシュしてしまう可能性がある
 
 ---
 
