@@ -11,11 +11,34 @@
 **質問：**
 （生成AIに聞いた質問をそのまま書く）
 
+NSObjectについて分かりやすく教えて
+
 **AIの回答の要点：**
 （長い回答の場合、要点だけ自分の言葉でまとめる）
 
+Appleの多くの機能が動くための「基本の土台クラス」またはAppleのフレームワークの共通の親
+
+** NSObjectって何？
+
+これはAppleが昔から使っているObjective-Cという言語の世界で作られた、超基本クラスです
+
+```
+NSObject（土台）
+   ↓
+UIButton
+UIViewController
+UIImagePickerController
+Coordinator
+```
+
+Swiftができる前からある存在です。
+
+AppleのUIKit、Foundation、AppKitなどは、この仕組みの上に作られています。だからSwiftでもよく出てきます。
+
 **自分の理解：**
 （回答を受けて自分がどう理解したか。納得できたか、さらに疑問が生まれたか）
+
+SwiftUIがUIKitなどのAppleの古い仕組みと連携するときによく使う土台みたいなクラス
 
 ### Q2
 
