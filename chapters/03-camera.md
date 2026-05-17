@@ -283,12 +283,48 @@ struct ContentView: View {
 ```
 onChangeを使うことによって値の変化を検知を行っている
 
-なぜ非同期処理を行っている？
+なぜ非同期処理を行っている？　アプリがフレーズのを防ぐ
 
-アプリがフレーズのを防ぐ
+fullScreenCover と isShowingCameraはセットになります。
+```
+@State private var isShowingCamera = false
+```
+```
+.fullScreenCover(isPresented: $isShowingCamera)
+```
+これがないとカメラ画面は出ません。
+
+仕組みは：
+
+ボタン押す
+
+↓
+
+isShowingCamera = true
+
+↓
+
+fullScreenCoverが反応
+
+↓
+
+CameraView表示
+
+
 
 **もしこう書かなかったら：**
 （この部分を省略したり変えたりすると何が起きるか。実際に試した結果があればここに書く）
+
+SwiftUIは状態が変わったら画面を再描画する仕組みなので @State がないと画面更新されない。
+
+onChange がないと写真が選ばれたことを検知できなくて、画像が表示されない。
+
+```
+.disabled(!UIImagePickerController.isSourceTypeAvailable(.camera))
+```
+
+これを外すとシミュレータでカメラ押したとき問題が出やすい
+
 
 ---
 
