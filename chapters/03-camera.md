@@ -278,12 +278,13 @@ struct ContentView: View {
 **なぜこう書くのか：**
 （別の書き方ではなく、この書き方が選ばれている理由を説明する）
 
+1.
 ```
 .onChange(of: selectedItem)
 ```
 onChangeを使うことによって値の変化を検知を行っている
 
-なぜ非同期処理を行っている？　アプリがフレーズのを防ぐ
+2.なぜ非同期処理を行っている？　アプリがフレーズのを防ぐ
 
 fullScreenCover と isShowingCameraはセットになります。
 ```
@@ -315,9 +316,9 @@ CameraView表示
 **もしこう書かなかったら：**
 （この部分を省略したり変えたりすると何が起きるか。実際に試した結果があればここに書く）
 
-SwiftUIは状態が変わったら画面を再描画する仕組みなので @State がないと画面更新されない。
+1.SwiftUIは状態が変わったら画面を再描画する仕組みなので @State がないと画面更新されない。
 
-onChange がないと写真が選ばれたことを検知できなくて、画像が表示されない。
+2.onChange がないと写真が選ばれたことを検知できなくて、画像が表示されない。
 
 ```
 .disabled(!UIImagePickerController.isSourceTypeAvailable(.camera))
