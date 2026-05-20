@@ -265,16 +265,35 @@ struct SettingsView: View {
 
 （アプリの動作を自分の言葉で説明する。スクリーンショットを貼ってもよい。）
 
+メモを書き込み、追加、編集、削除し、自動保存を備え、アプリを再起動するときにデータが残るアプリです。
+
 ## コードの詳細解説
 
 ### SwiftDataモデル（@Model）
 
 ```swift
 // 該当部分のコードを抜粋して貼る
+
+@Model
+class Memo {
+    var title: String
+    var content: String
+    var createdAt: Date
+    var isFavorite: Bool
+
+    init(title: String, content: String, createdAt: Date = .now, isFavorite: Bool = false) {
+        self.title = title
+        self.content = content
+        self.createdAt = createdAt
+        self.isFavorite = isFavorite
+    }
+}
 ```
 
 **何をしているか：**
 （この部分が果たしている役割を説明する）
+
+これは「メモ1件」を表しているクラスと新しいメモを作るときのルールです。
 
 **なぜこう書くのか：**
 （別の書き方ではなく、この書き方が選ばれている理由を説明する）
