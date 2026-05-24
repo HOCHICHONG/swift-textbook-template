@@ -113,13 +113,13 @@ SwiftUIにおいての @Queryはどんな意味?
 
 内部的には@Query は：
 
-SwiftData の ModelContext に接続
+・SwiftData の ModelContext に接続
 
-Fetch実行
+・Fetch実行
 
-差分監視
+・差分監視
 
-SwiftUI更新
+・SwiftUI更新
 
 を全部自動化しています。
 
