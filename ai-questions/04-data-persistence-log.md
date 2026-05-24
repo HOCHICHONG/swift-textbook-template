@@ -29,9 +29,57 @@
 
 **質問：**
 
+@Environment　とは？
+
 **AIの回答の要点：**
 
+@Environment は、SwiftUIで「ビュー階層全体に共有される設定や状態」を、親ビューから子ビューへ自動的に渡すための仕組みです。
+
+よく使う例：
+
+ダークモード取得
+```
+struct ContentView: View {
+    @Environment(\.colorScheme) var colorScheme
+
+    var body: some View {
+        Text(colorScheme == .dark ? "Dark" : "Light")
+    }
+}
+```
+ここではシステムのライト/ダークモードを取得しています。
+
+@Environment の意味:Environment は「環境値」です。
+
+SwiftUIには：
+
+文字サイズ
+
+ダークモード
+
+ロケール
+
+dismiss処理
+
+managedObjectContext
+
+など、アプリ全体で共有したい値が大量にあります。
+
+それらをEnvironmentValuesという仕組みで管理しています。
+
+@State や @Binding との違い
+```
+| 機能             | 用途             |
+| -------------- | -------------- |
+| `@State`       | View内部の状態      |
+| `@Binding`     | 親子間の双方向共有      |
+| `@Environment` | アプリ全体・階層全体の共有値 |
+
+```
+
 **自分の理解：**
+
+アプリ全体の情報を親のビューから子ビューに自動に渡すことができる仕組み
 
 ### Q3
 
