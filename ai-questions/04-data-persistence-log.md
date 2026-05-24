@@ -68,14 +68,14 @@ managedObjectContext
 それらをEnvironmentValuesという仕組みで管理しています。
 
 @State や @Binding との違い
-```
+
 | 機能             | 用途             |
 | -------------- | -------------- |
 | `@State`       | View内部の状態      |
 | `@Binding`     | 親子間の双方向共有      |
 | `@Environment` | アプリ全体・階層全体の共有値 |
 
-```
+
 
 **自分の理解：**
 
