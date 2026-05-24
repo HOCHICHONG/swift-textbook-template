@@ -360,6 +360,33 @@ struct MemoAddView: View {
 
 **何をしているか：**
 
+この部分は主に
+
+・メモを削除する処理
+
+・メモを追加する画面
+
+```
+//選択されたメモを削除する関数
+func deleteMemos(at offsets: IndexSet) {
+    for index in offsets {
+        let memo = displayedMemos[index]
+        modelContext.delete(memo)
+    }
+}
+```
+全体の流れ
+```
+削除操作
+↓
+削除された行番号を受け取る
+↓
+そのメモを探す
+↓
+SwiftDataから削除
+```
+
+
 **なぜこう書くのか：**
 
 **もしこう書かなかったら：**
