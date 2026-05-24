@@ -85,9 +85,47 @@ managedObjectContext
 
 **質問：**
 
+SwiftUIにおいての @Queryはどんな意味?
+
 **AIの回答の要点：**
 
+@Query は、SwiftUI の SwiftData で使うプロパティラッパーで、「データベースから条件に合うデータを自動取得し、UIと同期する」ための仕組みです。
+
+@Environment との関係
+
+よく一緒に使います。
+```
+//例
+@Environment(\.modelContext) private var context
+@Query private var todos: [Todo]
+```
+役割：
+
+| 機能                             | 意味          |
+| ------------------------------ | ----------- |
+| `@Environment(\.modelContext)` | DB操作する場所    |
+| `@Query`                       | DBから取得する仕組み |
+
+イメージとして：
+
+@Environment→「アプリの共有設定を読む」
+@Query→「DB監視付きSELECT文」
+
+内部的には@Query は：
+
+SwiftData の ModelContext に接続
+
+Fetch実行
+
+差分監視
+
+SwiftUI更新
+
+を全部自動化しています。
+
 **自分の理解：**
+
+データベースのデータを監視しデータを取得する仕組み、@Environmentとの相性がいい
 
 （質問は何個でも追加してください。多ければ多いほど良いです。）
 
