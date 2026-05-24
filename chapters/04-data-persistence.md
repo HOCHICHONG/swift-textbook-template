@@ -314,6 +314,48 @@ class Memo {
 
 ```swift
 // 該当部分のコードを抜粋して貼る
+    func deleteMemos(at offsets: IndexSet) {
+        for index in offsets {
+            let memo = displayedMemos[index]
+            modelContext.delete(memo)
+        }
+    }
+
+struct MemoAddView: View {
+    @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) private var dismiss
+    @State private var title = ""
+    @State private var content = ""
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section("タイトル") {
+                    TextField("メモのタイトル", text: $title)
+                }
+                Section("内容") {
+                    TextEditor(text: $content)
+                        .frame(minHeight: 200)
+                }
+            }
+            .navigationTitle("新しいメモ")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("キャンセル") { dismiss() }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("保存") {
+                        let memo = Memo(title: title, content: content)
+                        modelContext.insert(memo)
+                        dismiss()
+                    }
+                    .disabled(title.isEmpty)
+                }
+            }
+        }
+    }
+}
 ```
 
 **何をしているか：**
@@ -328,6 +370,67 @@ class Memo {
 
 ```swift
 // 該当部分のコードを抜粋して貼る
+
+struct ContentView: View {
+    @Environment(\.modelContext) private var modelContext
+    @Query(sort: \Memo.createdAt, order: .reverse) private var memos: [Memo]
+    @AppStorage("sortByFavorite") private var sortByFavorite: Bool = false
+    @AppStorage("userName") private var userName: String = ""
+    @State private var isShowingAddSheet = false
+    @State private var isShowingSettings = false
+
+    var displayedMemos: [Memo] {
+        if sortByFavorite {
+            return memos.sorted { $0.isFavorite && !$1.isFavorite }
+        }
+        return memos
+    }
+
+    var body: some View {
+        NavigationStack {
+            Group {
+                if memos.isEmpty {
+                    ContentUnavailableView(
+                        "メモがありません",
+                        systemImage: "note.text",
+                        description: Text("右上の＋ボタンからメモを追加してください")
+                    )
+                } else {
+                    List {
+                        ForEach(displayedMemos) { memo in
+                            NavigationLink(destination: MemoEditView(memo: memo)) {
+                                MemoRow(memo: memo)
+                            }
+                        }
+                        .onDelete(perform: deleteMemos)
+                    }
+                }
+            }
+            .navigationTitle(userName.isEmpty ? "メモ帳" : "\(userName)のメモ帳")
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        isShowingSettings = true
+                    } label: {
+                        Image(systemName: "gear")
+                    }
+                }
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        isShowingAddSheet = true
+                    } label: {
+                        Image(systemName: "plus")
+                    }
+                }
+            }
+            .sheet(isPresented: $isShowingAddSheet) {
+                MemoAddView()
+            }
+            .sheet(isPresented: $isShowingSettings) {
+                SettingsView(userName: $userName, sortByFavorite: $sortByFavorite)
+            }
+        }
+    }
 ```
 
 **何をしているか：**
@@ -342,6 +445,36 @@ class Memo {
 
 ```swift
 // 該当部分のコードを抜粋して貼る
+struct SettingsView: View {
+    @Binding var userName: String
+    @Binding var sortByFavorite: Bool
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section("ユーザー設定") {
+                    TextField("あなたの名前", text: $userName)
+                }
+                Section("表示設定") {
+                    Toggle("お気に入りを上に表示", isOn: $sortByFavorite)
+                }
+                Section {
+                    Text("設定はアプリを閉じても保存されます")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+            .navigationTitle("設定")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("完了") { dismiss() }
+                }
+            }
+        }
+    }
+}
 ```
 
 **何をしているか：**
