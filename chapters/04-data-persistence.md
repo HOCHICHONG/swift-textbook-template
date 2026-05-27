@@ -385,12 +385,40 @@ func deleteMemos(at offsets: IndexSet) {
 ↓
 SwiftDataから削除
 ```
-
+そして
+```
+スワイプで削除
+   ↓
+deleteMemos()
+   ↓
+SwiftDataから削除
+```
+という流れです。
 
 **なぜこう書くのか：**
 
+1.入力内容保存のために＠Stateを書く
+
+2.空のタイトルデータを防ぐように.disabled(title.isEmpty)で無効化する
+
+そしてSwiftDataを使って、
+
+・自動保存
+
+・自動更新
+
+を実現しています。
+```
+modelContext.insert(memo)
+```
+```
+modelContext.delete(memo)
+```
 **もしこう書かなかったら：**
 
+1. .disabledで空のタイトルを防がないとアプリがクラッシュする可能性がある
+
+2. 
 ---
 
 ### @Queryによるデータ取得
