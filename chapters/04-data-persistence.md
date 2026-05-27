@@ -524,6 +524,37 @@ private var sortByFavorite: Bool = false
 
 **もしこう書かなかったら：**
 
+1.@Queryを書かないとメモ一覧が取得できなくなる(保存しているが、画面に表示できない)
+
+原因：@Query の役割は
+```
+SwiftDataから
+自動でデータ取得
++
+画面更新
+```
+やってくれるから
+
+2.@Environmentを書かないと
+
+メモが
+
+・削除不可
+
+・保存不可
+
+・更新不可
+
+になります。
+
+
+3.@Stateを書かないとデータの監視や画面更新ができなくなる
+
+4..sheet(isPresented: $isShowingAddSheet)を書かないとせっかく作ったViewが表示できない
+
+5.Bindingを書かないとデータの共有ができなくなる
+
+
 ---
 
 ### @AppStorageによる設定保存
