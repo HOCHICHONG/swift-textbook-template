@@ -492,7 +492,35 @@ struct ContentView: View {
 
 **何をしているか：**
 
+やっていることを一言でいうと、
+```
+メモを表示する
++
+追加する
++
+設定を開く
++
+削除する
++
+並び替える
+```
+という仕組みです。
+
 **なぜこう書くのか：**
+
+1.
+```
+@Query(sort: \Memo.createdAt, order: .reverse)
+private var memos: [Memo]
+```
+@Queryを使ってSwiftDataからMemoを全部取得する仕組み
+
+2.
+```
+@AppStorage("sortByFavorite")
+private var sortByFavorite: Bool = false
+```
+@AppStorageを使って設定の保存を行なっている、そしてアプリを再起動してもデータが残る
 
 **もしこう書かなかったら：**
 
