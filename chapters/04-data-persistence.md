@@ -401,7 +401,7 @@ SwiftDataから削除
 
 2.空のタイトルデータを防ぐように.disabled(title.isEmpty)で無効化する
 
-そしてSwiftDataを使って、
+3.SwiftDataを使って、
 
 ・自動保存
 
@@ -418,7 +418,9 @@ modelContext.delete(memo)
 
 1. .disabledで空のタイトルを防がないとアプリがクラッシュする可能性がある
 
-2. 
+2. @Environmentを書かないとデータの保存や削除ができなくなる
+
+3. @Stateを書かないとデータの監視ができなくなる　→ 更新がおかしくなる
 ---
 
 ### @Queryによるデータ取得
