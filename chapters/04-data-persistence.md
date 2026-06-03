@@ -595,7 +595,40 @@ struct SettingsView: View {
 
 **何をしているか：**
 
+このコードは「設定画面」を作っています。
+
+役割は主に2つ：
+```
+① ユーザー名を変更
+② 表示設定を変更
+```
+そして変更した内容を、
+```
+親画面(ContentView)へ反映
+```
+しています。
+
 **なぜこう書くのか：**
+
+1.@Bindingで設定した資料をContentViewへ反映
+```
+@Binding var userName: String
+
+@Binding var sortByFavorite: Bool
+
+```
+イメージとしては
+```
+SettingsViewで変更
+↓
+ContentViewも更新
+↓
+AppStorageにも保存
+```
+
+2.dismiss
+これは「画面を閉じる」機能。
+
 
 **もしこう書かなかったら：**
 
