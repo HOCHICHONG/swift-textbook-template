@@ -504,9 +504,26 @@ MapKit
 
 ```swift
 // 該当部分のコードを抜粋して貼る
+struct ContentView: View {
+    var body: some View {
+        TabView {
+            MapTab()
+                .tabItem {
+                    Label("マップ", systemImage: "map")
+                }
+
+            ListTab()
+                .tabItem {
+                    Label("一覧", systemImage: "list.bullet")
+                }
+        }
+    }
+}
 ```
 
 **何をしているか：**
+
+タブ構成は、このアプリの画面の入口（ナビゲーション設計）を担当しています。
 
 **なぜこう書くのか：**
 
