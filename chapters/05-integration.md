@@ -560,6 +560,67 @@ ContentView
 
 ```swift
 
+このアプリでは、
+① 写真を取得する
+② 現在地を取得する
+③ 同じ PhotoRecord に入れる
+ことで連携を実現しています。
+
+まず LocationManager が現在地を持っています。GPSが更新されると最新位置が保存されるコード
+@Observable
+class LocationManager: NSObject, CLLocationManagerDelegate {
+    private let manager = CLLocationManager()
+    var currentLocation: CLLocationCoordinate2D?
+
+    override init() {
+        super.init()
+        manager.delegate = self
+        manager.desiredAccuracy = kCLLocationAccuracyBest
+        manager.requestWhenInUseAuthorization()
+        manager.startUpdatingLocation()
+    }
+
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        currentLocation = locations.last?.coordinate
+    }
+}
+
+後は写真が選ばれるとselectedImageDataに写真データが保存されるコード
+PhotosPicker(
+    selection: $selectedItem,
+    matching: .images
+) {
+    Label("写真を選択", systemImage: "photo")
+}
+
+.onChange(of: selectedItem) { _, newItem in
+    Task {
+        if let data = try? await newItem?
+            .loadTransferable(type: Data.self) {
+
+            selectedImageData = data
+        }
+    }
+}
+
+本当の連携部分
+func saveRecord() {
+    guard let location =
+        locationManager.currentLocation
+    else { return }
+
+    let record = PhotoRecord(
+        title: title,
+        memo: memo,
+        latitude: location.latitude,
+        longitude: location.longitude,
+        imageData: selectedImageData
+    )
+
+    modelContext.insert(record)
+
+    dismiss()
+}
 
 ```
 
