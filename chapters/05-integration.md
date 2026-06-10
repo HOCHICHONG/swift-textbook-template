@@ -422,6 +422,21 @@ class PhotoRecord {
 
 このデータモデルの目的はPhotoRecordに写真1件分の記録を表すことです。
 
+イメージとしては：
+```
+PhotoRecord
+│
+├─ title       : タイトル
+├─ memo        : メモ
+├─ latitude    : 緯度
+├─ longitude   : 経度
+├─ imageData   : 写真
+├─ createdAt   : 作成日時
+│
+├─ coordinate  : 地図用
+└─ uiImage     : 画面表示用
+```
+
 
 例えば、このアプリで「東京タワーの写真」を保存したとします。
 保存されるデータはこんな感じです。
@@ -441,9 +456,9 @@ class PhotoRecord {
 
 1.@Model の意味
 
-PhotoRecordというクラスをSwiftDataで保存できるようにする
+-> PhotoRecordというクラスをSwiftDataで保存できるようにする
 
-SwiftDataは@Modelをつけているクラスを見つけると、
+-> SwiftDataは@Modelをつけているクラスを見つけると、
 
 内部で自動的に
 ```
@@ -452,17 +467,34 @@ SwiftDataは@Modelをつけているクラスを見つけると、
 読み込み
 更新
 削除
-
 ```
 をしてくれます。
 
+2.CLLocationCoordinate2Dはどんな役割をしている？
+
+-> MapKitは場所を表す標準形式として CLLocationCoordinate2D を使うように設計されているからです。
+
+流れとしては:
+```
+SwiftData保存
+    ↓
+latitude
+longitude
+    ↓
+Map表示時
+    ↓
+CLLocationCoordinate2D
+    ↓
+MapKit
+```
+つまり coordinate は、保存用データ（latitude, longitude）をMapKitが理解できる位置情報オブジェクトに変換するための橋渡し役 なのです。
 
 **もしこう書かなかったら：**
 （この部分を省略したり変えたりすると何が起きるか。実際に試した結果があればここに書く）
 
 1.@Modelを書かないと
 
-PhotoRecordのデータはSwiftDataで保存できない
+-> PhotoRecordのデータはSwiftDataで保存できない
 
 
 
