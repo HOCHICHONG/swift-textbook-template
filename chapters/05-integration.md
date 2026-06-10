@@ -1,7 +1,7 @@
 # 第5章：機能統合の実践
 
 > 執筆者：（氏名）
-> 最終更新：YYYY-MM-DD
+> 最終更新：2026-06-10
 
 ## この章で学ぶこと
 
@@ -369,6 +369,34 @@ struct RecordDetailView: View {
 
 ```swift
 // 該当部分のコードを抜粋して貼る
+
+@Model
+class PhotoRecord {
+    var title: String
+    var memo: String
+    var latitude: Double
+    var longitude: Double
+    var imageData: Data?
+    var createdAt: Date
+
+    init(title: String, memo: String = "", latitude: Double, longitude: Double, imageData: Data? = nil) {
+        self.title = title
+        self.memo = memo
+        self.latitude = latitude
+        self.longitude = longitude
+        self.imageData = imageData
+        self.createdAt = .now
+    }
+
+    var coordinate: CLLocationCoordinate2D {
+        CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    }
+
+    var uiImage: UIImage? {
+        guard let data = imageData else { return nil }
+        return UIImage(data: data)
+    }
+}
 ```
 
 **何をしているか：**
