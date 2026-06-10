@@ -496,8 +496,6 @@ MapKit
 
 -> PhotoRecordのデータはSwiftDataで保存できない
 
-
-
 ---
 
 ### タブ構成の設計
@@ -524,6 +522,19 @@ struct ContentView: View {
 **何をしているか：**
 
 タブ構成は、このアプリの画面の入口（ナビゲーション設計）を担当しています。
+
+構造としては
+```
+ContentView
+│
+└─ TabView
+    │
+    ├─ MapTab
+    │   └─ 地図
+    │
+    └─ ListTab
+        └─ 一覧
+```
 
 **なぜこう書くのか：**
 
