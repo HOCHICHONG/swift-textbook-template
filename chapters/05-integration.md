@@ -626,6 +626,29 @@ func saveRecord() {
 
 **何をしているか：**
 
+別々に取得したデータを同じ PhotoRecord インスタンスに格納して保存することなんです。
+
+流れとしては：
+```
+写真データ
+(selectedImageData)
+
+        +
+
+現在地
+(location.latitude
+ location.longitude)
+
+        ↓
+
+PhotoRecord
+
+        ↓
+
+SwiftData保存
+```
+
+
 **なぜこう書くのか：**
 
 **もしこう書かなかったら：**
