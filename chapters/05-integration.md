@@ -663,6 +663,10 @@ SwiftData保存
 
 **何をしているか：**
 
+1.NSObject
+
+->SwiftUIとUIKitが連携できるようにNSObjectが必須
+
 **なぜこう書くのか：**
 
 **もしこう書かなかったら：**
