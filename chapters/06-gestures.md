@@ -372,6 +372,49 @@ struct CombinedDemoView: View {
 
 ```swift
 // 該当部分のコードを抜粋して貼る
+    var body: some View {
+        VStack(spacing: 30) {
+            Text("タップ回数: \(tapCount)")
+                .font(.title)
+
+            // シングルタップ
+            RoundedRectangle(cornerRadius: 16)
+                .fill(backgroundColor)
+                .frame(width: 200, height: 200)
+                .overlay {
+                    Text("タップしてね")
+                        .foregroundStyle(.white)
+                        .font(.headline)
+                }
+                .onTapGesture {
+                    tapCount += 1
+                    backgroundColor = Color(
+                        hue: Double.random(in: 0...1),
+                        saturation: 0.7,
+                        brightness: 0.9
+                    )
+                }
+
+            // ロングプレス
+            Circle()
+                .fill(isPressed ? .green : .orange)
+                .frame(width: 120, height: 120)
+                .scaleEffect(isPressed ? 1.3 : 1.0)
+                .overlay {
+                    Text(isPressed ? "成功!" : "長押し")
+                        .foregroundStyle(.white)
+                        .font(.headline)
+                }
+                .animation(.spring(duration: 0.3), value: isPressed)
+                .onLongPressGesture(minimumDuration: 1.0) {
+                    isPressed = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                        isPressed = false
+                    }
+                }
+        }
+        .navigationTitle("タップ & ロングプレス")
+    }
 ```
 
 **何をしているか：**
