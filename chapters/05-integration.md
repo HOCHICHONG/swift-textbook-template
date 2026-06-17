@@ -651,6 +651,39 @@ SwiftData保存
 
 **なぜこう書くのか：**
 
+1.NSObject
+
+->SwiftUIとUIKitが連携できるようにNSObjectが必須
+
+**なぜこう書くのか：**
+
+1.guard letと使ってエラーが発生する前にそれを弾く
+
+例：currentLocation最初はnilで、アプリ起動直後は現在地を取るための時間がかかるのでlatitude: location.latitudeがないとアプリがクラッシュしてしまう。
+
+→つまりguard letは位置情報があることを確認してから使うという安全装置です。
+
+
+2.位置情報があることを確認してから使う
+```
+let record = PhotoRecord(
+    title: title,
+    memo: memo,
+    latitude: location.latitude,
+    longitude: location.longitude,
+    imageData: selectedImageData
+)
+```
+もし
+```
+PhotoRecord(
+    title: title
+)
+```
+だけ保存したら、写真と位置がバラバラになります。
+
+3.PhotosPickerは非同期(await)->写真の取得はすぐ終わるわけではないからです。
+
 **もしこう書かなかったら：**
 
 ---
@@ -659,15 +692,69 @@ SwiftData保存
 
 ```swift
 // 該当部分のコードを抜粋して貼る
+
+//保存の場所
+@Model
+class PhotoRecord {
+
+    var title: String
+    var memo: String
+
+    var latitude: Double
+    var longitude: Double
+
+    var imageData: Data?
+
+    var createdAt: Date
+}
+
+//保存ようの変数
+var imageData: Data?
+
+//写真を選ぶ
+PhotosPicker(
+    selection: $selectedItem,
+    matching: .images
+)
+
+//写真のData型に変える
+.onChange(of: selectedItem) { _, newItem in
+    
+    Task {
+        if let data =
+            try? await newItem?
+            .loadTransferable(type: Data.self) {
+
+            selectedImageData = data
+        }
+    }
+}
+
+//表示する
+var uiImage: UIImage? {
+    guard let data = imageData else {
+        return nil
+    }
+
+    return UIImage(data: data)
+}
+
+
 ```
 
 **何をしているか：**
 
-1.NSObject
-
-->SwiftUIとUIKitが連携できるようにNSObjectが必須
-
-**なぜこう書くのか：**
+流れとして:
+```
+imageData
+(Data)
+↓
+UIImage(data:)
+↓
+UIImage
+↓
+Image(uiImage:)
+```
 
 **もしこう書かなかったら：**
 
