@@ -445,8 +445,19 @@ isPressed = false
 1.@Stateをつけることによって値が変わると画面が自動更新されます。
 
 2.円に上に文字を表示できるようにoverlayを使用。
+```
+.overlay {
+Text(isPressed ? "成功!" : "長押し")
+.foregroundStyle(.white)
+.font(.headline)
+}
+```
 
-3.
+
+**もしこう書かなかったら：**
+（この部分を省略したり変えたりすると何が起きるか。実際に試した結果があればここに書く）
+
+1.
 ```
 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                         isPressed = false
@@ -456,15 +467,72 @@ DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
 
 
 
-**もしこう書かなかったら：**
-（この部分を省略したり変えたりすると何が起きるか。実際に試した結果があればここに書く）
-
 ---
 
 ### ドラッグジェスチャーとオフセット管理
 
 ```swift
 // 該当部分のコードを抜粋して貼る
+
+struct DragDemoView: View {
+    @State private var offset: CGSize = .zero
+    @State private var lastOffset: CGSize = .zero
+
+    var body: some View {
+        VStack {
+            Text("カードをドラッグしてみよう")
+                .font(.headline)
+                .padding()
+
+            Spacer()
+
+            RoundedRectangle(cornerRadius: 20)
+                .fill(
+                    LinearGradient(
+                        colors: [.purple, .blue],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+                .frame(width: 200, height: 280)
+                .shadow(radius: 8)
+                .overlay {
+                    VStack {
+                        Image(systemName: "hand.draw")
+                            .font(.system(size: 40))
+                        Text("ドラッグ")
+                            .font(.title3)
+                    }
+                    .foregroundStyle(.white)
+                }
+                .offset(offset)
+                .gesture(
+                    DragGesture()
+                        .onChanged { value in
+                            offset = CGSize(
+                                width: lastOffset.width + value.translation.width,
+                                height: lastOffset.height + value.translation.height
+                            )
+                        }
+                        .onEnded { _ in
+                            lastOffset = offset
+                        }
+                )
+
+            Spacer()
+
+            Button("リセット") {
+                withAnimation(.spring) {
+                    offset = .zero
+                    lastOffset = .zero
+                }
+            }
+            .buttonStyle(.bordered)
+            .padding()
+        }
+        .navigationTitle("ドラッグ")
+    }
+}
 ```
 
 **何をしているか：**
