@@ -562,6 +562,23 @@ LinearGradient(
 ──────🔵
 ```
 
+2.座標の計算
+```
+.gesture(
+    DragGesture()
+    .onChanged { value in
+    offset = CGSize(
+    width: lastOffset.width + value.translation.width,
+    height: lastOffset.height + value.translation.height
+                            )
+                        }
+    .onEnded { _ in
+        lastOffset = offset
+                        }
+)
+
+```
+
 **もしこう書かなかったら：**
 
 
