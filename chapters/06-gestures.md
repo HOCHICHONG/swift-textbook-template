@@ -537,9 +537,34 @@ struct DragDemoView: View {
 
 **何をしているか：**
 
+このコードは **SwiftUIで「カードを指でドラッグして動かせる画面」**を作っています。
+
+→ポイントは DragGesture と offset の組み合わせです。
+
+⭐️offsetとは？　→ 現在カードがどれだけ移動しているかを表す
+
+⭐️lastOffsetとは？ → 「前回ドラッグ終了時の位置」を保存するためのもの
+
 **なぜこう書くのか：**
 
+1.ボタンの設計
+```
+LinearGradient(
+    colors: [.purple, .blue],
+    startPoint: .topLeading,
+    endPoint: .bottomTrailing
+)
+紫 → 青のグラデーション。
+
+イメージとしては：
+🟣──────
+        ↓
+──────🔵
+```
+
 **もしこう書かなかったら：**
+
+
 
 ---
 
