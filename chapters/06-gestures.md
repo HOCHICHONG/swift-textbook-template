@@ -578,7 +578,27 @@ LinearGradient(
 )
 
 ```
+分解すると：lastOffset → 前回までの位置**
+         value.translation → 今回のドラッグ量
 
+つまり：
+```
+現在位置
+=
+過去の位置
++
+今回の移動
+```
+
+3.ドラッグ終了時
+```
+.onEnded { _ in
+    lastOffset = offset
+}
+```
+指を離した瞬間 → 現在位置を保存します。
+
+         
 **もしこう書かなかったら：**
 
 
