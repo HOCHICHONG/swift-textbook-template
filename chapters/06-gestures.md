@@ -611,9 +611,114 @@ withAnimation(.spring)
 
 ```swift
 // 該当部分のコードを抜粋して貼る
+// MARK: - ピンチ（拡大縮小）
+
+struct MagnifyDemoView: View {
+    @State private var scale: CGFloat = 1.0
+    @State private var lastScale: CGFloat = 1.0
+
+    var body: some View {
+        VStack {
+            Text("ピンチで拡大縮小")
+                .font(.headline)
+                .padding()
+
+            Text(String(format: "倍率: %.1fx", scale))
+                .font(.caption)
+                .foregroundStyle(.secondary)
+
+            Spacer()
+
+            Image(systemName: "star.fill")
+                .font(.system(size: 100))
+                .foregroundStyle(.yellow)
+                // タッチ判定を300×300の透明な領域に広げる
+                .frame(width: 300, height: 300)
+                .contentShape(Rectangle())
+                .scaleEffect(scale)
+                .gesture(
+                    MagnifyGesture()
+                        .onChanged { value in
+                            scale = lastScale * value.magnification
+                        }
+                        .onEnded { _ in
+                            lastScale = scale
+                        }
+                )
+
+            Spacer()
+
+            Button("リセット") {
+                withAnimation(.spring) {
+                    scale = 1.0
+                    lastScale = 1.0
+                }
+            }
+            .buttonStyle(.bordered)
+            .padding()
+        }
+        .navigationTitle("ピンチ")
+    }
+}
+
+
+// MARK: - 回転
+
+struct RotateDemoView: View {
+    @State private var angle: Angle = .zero
+    @State private var lastAngle: Angle = .zero
+
+    var body: some View {
+        VStack {
+            Text("2本指で回転")
+                .font(.headline)
+                .padding()
+
+            Text(String(format: "角度: %.0f°", angle.degrees))
+                .font(.caption)
+                .foregroundStyle(.secondary)
+
+            Spacer()
+
+            Image(systemName: "arrow.up")
+                .font(.system(size: 80))
+                .foregroundStyle(.red)
+                // タッチ判定を300×300の透明な領域に広げる
+                .frame(width: 300, height: 300)
+                .contentShape(Rectangle())
+                .rotationEffect(angle)
+                .gesture(
+                    RotateGesture()
+                        .onChanged { value in
+                            angle = lastAngle + value.rotation
+                        }
+                        .onEnded { _ in
+                            lastAngle = angle
+                        }
+                )
+
+            Spacer()
+
+            Button("リセット") {
+                withAnimation(.spring) {
+                    angle = .zero
+                    lastAngle = .zero
+                }
+            }
+            .buttonStyle(.bordered)
+            .padding()
+        }
+        .navigationTitle("回転")
+    }
+}
+
 ```
 
 **何をしているか：**
+
+1.ビンチで画像の拡大縮小の操作ができる(Macの場合optionを押しながら操作する)、そしてリセットボタンでデフォルトのサイズに戻す
+
+2.2本指の操作で矢印を回転させる仕組み、そしてリセットボタンでデフォルトの位置に戻す。
 
 **なぜこう書くのか：**
 
