@@ -805,6 +805,84 @@ struct RotateDemoView: View {
 
 ```swift
 // 該当部分のコードを抜粋して貼る
+// MARK: - 組み合わせ
+
+struct CombinedDemoView: View {
+    @State private var offset: CGSize = .zero
+    @State private var lastOffset: CGSize = .zero
+    @State private var scale: CGFloat = 1.0
+    @State private var lastScale: CGFloat = 1.0
+    @State private var angle: Angle = .zero
+    @State private var lastAngle: Angle = .zero
+
+    var body: some View {
+        VStack {
+            Text("ドラッグ・ピンチ・回転を同時に")
+                .font(.headline)
+                .padding()
+
+            Spacer()
+
+            Image(systemName: "photo.artframe")
+                .font(.system(size: 120))
+                .foregroundStyle(.indigo)
+                // タッチ判定を300×300の透明な領域に広げる
+                .frame(width: 300, height: 300)
+                .contentShape(Rectangle())
+                .scaleEffect(scale)
+                .rotationEffect(angle)
+                .offset(offset)
+                .gesture(
+                    DragGesture()
+                        .onChanged { value in
+                            offset = CGSize(
+                                width: lastOffset.width + value.translation.width,
+                                height: lastOffset.height + value.translation.height
+                            )
+                        }
+                        .onEnded { _ in
+                            lastOffset = offset
+                        }
+                )
+                // 複数のジェスチャーを「同時に」効かせるには
+                // .gesture を重ねるのではなく .simultaneousGesture を使う
+                .simultaneousGesture(
+                    MagnifyGesture()
+                        .onChanged { value in
+                            scale = lastScale * value.magnification
+                        }
+                        .onEnded { _ in
+                            lastScale = scale
+                        }
+                )
+                .simultaneousGesture(
+                    RotateGesture()
+                        .onChanged { value in
+                            angle = lastAngle + value.rotation
+                        }
+                        .onEnded { _ in
+                            lastAngle = angle
+                        }
+                )
+
+            Spacer()
+
+            Button("リセット") {
+                withAnimation(.spring) {
+                    offset = .zero
+                    lastOffset = .zero
+                    scale = 1.0
+                    lastScale = 1.0
+                    angle = .zero
+                    lastAngle = .zero
+                }
+            }
+            .buttonStyle(.bordered)
+            .padding()
+        }
+        .navigationTitle("組み合わせ")
+    }
+}
 ```
 
 **何をしているか：**
