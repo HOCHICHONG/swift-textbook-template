@@ -716,11 +716,74 @@ struct RotateDemoView: View {
 
 **何をしているか：**
 
-1.ビンチで画像の拡大縮小の操作ができる(Macの場合optionを押しながら操作する)、そしてリセットボタンでデフォルトのサイズに戻す
+1.ビンチ操作で画像の拡大縮小の操作ができる(Macの場合optionを押しながら操作する)、そしてリセットボタンでデフォルトのサイズに戻す
+
+仕組み:
+
+2本指で広げる → 拡大
+
+2本指でつまむ → 縮小
+
 
 2.2本指の操作で矢印を回転させる仕組み、そしてリセットボタンでデフォルトの位置に戻す。
 
 **なぜこう書くのか：**
+
+1.状態管理
+```
+//拡大
+//画像の元々の大きさ
+@State private var scale: CGFloat = 1.0
+//操作後の大きさ
+@State private var lastScale: CGFloat = 1.0
+
+//回転
+//現在の回転角
+@State private var angle: Angle = .zero
+//前回終了時の角度
+@State private var lastAngle: Angle = .zero
+```
+これによって操作後の状態をちゃんと保存できる、戻るボタンも効く
+
+2.操作範囲を広げる仕組み
+```
+.frame(width: 300, height: 300)
+.contentShape(Rectangle())
+
+判定範囲がこう何ます
+┌─────────┐
+│         │
+│    ★    │  ← 300×300
+│         │
+└─────────┘
+```
+
+3.動いていると操作が終わった時の処理
+```
+拡大
+ .gesture(
+                    MagnifyGesture()
+                        .onChanged { value in
+                            scale = lastScale * value.magnification
+                        }
+                        .onEnded { _ in
+                            lastScale = scale
+                        }
+                )
+
+
+回転
+ .gesture(
+                    RotateGesture()
+                        .onChanged { value in
+                            angle = lastAngle + value.rotation
+                        }
+                        .onEnded { _ in
+                            lastAngle = angle
+                        }
+                )
+
+```
 
 **もしこう書かなかったら：**
 
