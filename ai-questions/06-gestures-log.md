@@ -96,13 +96,14 @@ Image(systemName: "star")
                 print("タップ")
             }
     )
-
-
+```
+```
 //仕組みとして
 Image
  ├─ DragGesture
  └─ TapGesture
-
+```
+```
 //動作
 指を置く
  ↓
