@@ -346,7 +346,7 @@ motionManager.startDeviceMotionUpdates(
 ```
 -> なせ.mainなのか？
 
-・それはSwiftUIの画面更新はメインスレッドで行うためです。
+・それはSwiftUIの画面更新はメインスレッドで行うからです。
 
 
 **もしこう書かなかったら：**
