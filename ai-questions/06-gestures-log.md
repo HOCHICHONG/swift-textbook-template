@@ -113,6 +113,12 @@ Gesture判定
  ↓
 片方だけ実行
 ```
+つまり、
+
+ドラッグ中 → DragGesture が勝つ
+
+軽く触る → TapGesture が勝つ
+
 こののような判定が競合になります、そこで.simultaneousGesture() は競合を解除する。
 
 **自分の理解：**
