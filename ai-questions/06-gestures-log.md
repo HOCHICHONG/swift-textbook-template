@@ -123,6 +123,7 @@ Gesture判定
 
 **自分の理解：**
 
+
 .simultaneousGesture は **「同じタッチ入力を複数のGestureに共有する仕組み」**です。
 
 ### Q3
