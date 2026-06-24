@@ -80,7 +80,42 @@ SwiftUIにおいてのGestureはユーザー操作 → 状態変更 → View更�
 
 .simultaneousGesture は SwiftUI のジェスチャー処理でかなり重要な仕組みです。簡単に言うと、「このジェスチャーと、別のジェスチャーを競合させずに同時認識する」ための modifierです。
 
+普通の場合
+```
+
+Image(systemName: "star")
+    .gesture(
+        DragGesture()
+            .onChanged { _ in
+                print("ドラッグ")
+            }
+    )
+    .gesture(
+        TapGesture()
+            .onEnded {
+                print("タップ")
+            }
+    )
+```
+```
+//仕組みとして
+Image
+ ├─ DragGesture
+ └─ TapGesture
+
+//動作
+指を置く
+ ↓
+Gesture判定
+ ↓
+どちらが勝つ？
+ ↓
+片方だけ実行
+```
+こののような判定が競合になります、そこで.simultaneousGesture() は競合を解除する。
+
 **自分の理解：**
+.simultaneousGesture は **「同じタッチ入力を複数のGestureに共有する仕組み」**です。
 
 ### Q3
 
