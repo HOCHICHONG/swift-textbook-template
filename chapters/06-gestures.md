@@ -893,9 +893,36 @@ struct CombinedDemoView: View {
 
 1.複数のジェスチャーを「同時に」効かせる仕組 『.simultaneousGesture』
 
+-> .simultaneousGesture() は「別のジェスチャーも許可する」ことができる
 
+イメージとしては：
+```
+タッチイベント
+        |
+        |
+        +--> DragGesture
+        |        |
+        |        +--> offset
+        |
+        +--> MagnifyGesture
+        |        |
+        |        +--> scale
+        |
+        +--> RotateGesture
+                 |
+                 +--> angle
+```
+.simultaneousGestureによって3つの処理が並行することが可能、そして、その数に制限はない。
 
 **もしこう書かなかったら：**
+
+1.もし『.simultaneousGesture』を使わなかったら
+```
+//例
+.gesture(DragGesture())
+.gesture(MagnifyGesture())
+```
+後のジェスチャーが優先されたり、競合したりします。
 
 ---
 
