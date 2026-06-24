@@ -330,13 +330,24 @@ var yaw: Double = 0 //回転方向
 4.更新の頻度
 
 ```
-motionManager.deviceMotionUpdateInterval =
-    1.0 / 60.0
+motionManager.deviceMotionUpdateInterval = 1.0 / 60.0
 
 //つまり
 //1 ÷ 60 = 0.016秒
 //毎秒60回センサーを読む。
 ```
+
+5.センサー開始の処理
+```
+//DeviceMotionのデータを取得して、mainスレッドで返す
+motionManager.startDeviceMotionUpdates(
+    to: .main 
+)
+```
+-> なせ.mainなのか？
+
+・それはSwiftUIの画面更新はメインスレッドで行うためです。
+
 
 **もしこう書かなかったら：**
 （この部分を省略したり変えたりすると何が起きるか。実際に試した結果があればここに書く）
