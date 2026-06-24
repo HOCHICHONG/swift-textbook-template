@@ -80,7 +80,7 @@ SwiftUIにおいてのGestureはユーザー操作 → 状態変更 → View更�
 
 .simultaneousGesture は SwiftUI のジェスチャー処理でかなり重要な仕組みです。簡単に言うと、「このジェスチャーと、別のジェスチャーを競合させずに同時認識する」ための modifierです。
 
-普通の場合
+普通の場合:
 ```
 
 Image(systemName: "star")
@@ -96,8 +96,8 @@ Image(systemName: "star")
                 print("タップ")
             }
     )
-```
-```
+
+
 //仕組みとして
 Image
  ├─ DragGesture
