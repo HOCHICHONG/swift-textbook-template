@@ -249,6 +249,38 @@ struct DataRow: View {
 
 ```swift
 // 該当部分のコードを抜粋して貼る
+@Observable
+class MotionManager {
+    private let motionManager = CMMotionManager()
+
+    var pitch: Double = 0    // 前後の傾き
+    var roll: Double = 0     // 左右の傾き
+    var yaw: Double = 0      // 水平方向の回転
+    var isAvailable: Bool
+
+    init() {
+        // 初回 body 評価時点で正しい値を返すよう、init で同期的にセット
+        isAvailable = motionManager.isDeviceMotionAvailable
+    }
+
+    func startUpdates() {
+        guard isAvailable else { return }
+
+        motionManager.deviceMotionUpdateInterval = 1.0 / 60.0
+
+        motionManager.startDeviceMotionUpdates(to: .main) { [weak self] motion, error in
+            guard let self = self, let motion = motion else { return }
+
+            self.pitch = motion.attitude.pitch
+            self.roll = motion.attitude.roll
+            self.yaw = motion.attitude.yaw
+        }
+    }
+
+    func stopUpdates() {
+        motionManager.stopDeviceMotionUpdates()
+    }
+}
 ```
 
 **何をしているか：**
