@@ -115,13 +115,14 @@ Gesture判定
 ```
 つまり、
 
-ドラッグ中 → DragGesture が勝つ
+**ドラッグ中 → DragGesture が勝つ**
 
-軽く触る → TapGesture が勝つ
+**軽く触る → TapGesture が勝つ**
 
 こののような判定が競合になります、そこで.simultaneousGesture() は競合を解除する。
 
 **自分の理解：**
+
 .simultaneousGesture は **「同じタッチ入力を複数のGestureに共有する仕組み」**です。
 
 ### Q3
