@@ -616,10 +616,35 @@ MotionManagerは残る
 
 ---
 
-### 歩数計（CMPedometer）
+### 歩数計（CMPedometer） SensorAdvanceから
 
 ```swift
 // 該当部分のコードを抜粋して貼る
+@Observable
+class ActivityTracker: NSObject, CLLocationManagerDelegate {
+    // 歩数関連
+    private let pedometer = CMPedometer()
+    var stepCount: Int = 0
+    var distance: Double = 0     // メートル
+    var isPedometerAvailable: Bool = false
+
+    // 位置関連
+    private let locationManager = CLLocationManager()
+    var currentSpeed: Double = 0  // m/s
+    var locations: [CLLocationCoordinate2D] = []
+
+    // 状態
+    var isTracking: Bool = false
+    var startTime: Date?
+    var endTime: Date?
+
+    override init() {
+        super.init()
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.requestWhenInUseAuthorization()
+        isPedometerAvailable = CMPedometer.isStepCountingAvailable()
+    }
 ```
 
 **何をしているか：**
