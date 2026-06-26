@@ -492,13 +492,128 @@ View消える
 
 ```swift
 // 該当部分のコードを抜粋して貼る
+
+motionManager.startDeviceMotionUpdates(to: .main) { [weak self] motion, error in
+    guard let self = self, let motion = motion else { return }
+
+self.pitch = motion.attitude.pitch
+            self.roll = motion.attitude.roll
+            self.yaw = motion.attitude.yaw
 ```
 
 **何をしているか：**
 
+水平器アプリの「センサー → 角度データ」への変換部分
+
 **なぜこう書くのか：**
 
+1.センサー開始の処理
+```
+//DeviceMotionのデータを取得して、mainスレッドで返す
+motionManager.startDeviceMotionUpdates(
+    to: .main 
+)
+```
+-> なせ.mainなのか？
+
+・それはSwiftUIの画面更新はメインスレッドで行うからです。
+
+2.weak self を使う理由
+stopUpdates() が絶対に呼ばれる保証はないからです。
+
+例えば：
+
+・アプリが強制終了
+
+・View構造が変わる
+
+・エラー発生
+
+・別のコード変更
+
+
 **もしこう書かなかったら：**
+
+1.メモリ管理でweak selfを使用
+「なくなっていたら無視して」を指定できる。
+
+weak selfは循環参照の防止のためつけたもの。（クロージャが長時間 self を保持）
+
+それをつけないと
+```
+MotionManager
+ ↓
+CMMotionManager
+ ↓
+クロージャ
+ ↓
+MotionManager
+```
+weak selfを使わないとメモリリーク（循環参照） が起きる可能性がある
+```
+motionManager.startDeviceMotionUpdates(to: .main) { [weak self] motion, error in
+    guard let self = self else { return }
+
+    self.pitch = motion.attitude.pitch
+}
+```
+例えばここにweak selfを抜けると
+
+オブジェクト同士の関係はこうなる
+```
+MotionManager
+      |
+      | owns
+      ↓
+CMMotionManager
+      |
+      | owns
+      ↓
+クロージャ
+      |
+      | owns
+      ↓
+MotionManager
+```
+つまり：
+```
+MotionManager → CMMotionManager → closure → MotionManager
+```
+という輪ができます。これを 循環参照（retain cycle） と呼びます。
+
+何故それが問題になる？
+Swiftのメモリ管理（ARC）は、「誰からも参照されなくなったオブジェクトを削除する」ことから
+
+循環がある場合：
+```
+MotionManager
+ ↑          ↓
+ └──────────┘
+```
+お互いが「まだ必要」と思ってしまう
+
+結果:
+```
+参照数 0にならない
+↓
+削除されない
+↓
+メモリに残り続ける
+```
+これがメモリリークです。
+
+このアプリにおいて：
+```
+画面消える
+↓
+MotionManagerは残る
+↓
+センサー更新継続
+↓
+メモリ使用継続
+```
+になる可能性があります。
+
 
 ---
 
