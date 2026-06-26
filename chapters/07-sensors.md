@@ -348,11 +348,25 @@ motionManager.startDeviceMotionUpdates(
 
 ・それはSwiftUIの画面更新はメインスレッドで行うからです。
 
-6.weak self
-「なくなっていたら無視して」を指定できる。
 
 **もしこう書かなかったら：**
 （この部分を省略したり変えたりすると何が起きるか。実際に試した結果があればここに書く）
+
+1.メモリ管理でweak selfを使用
+「なくなっていたら無視して」を指定できる。
+
+weak selfは循環参照の防止のためつけたもの。
+
+それをつけないと
+```
+MotionManager
+ ↓
+CMMotionManager
+ ↓
+クロージャ
+ ↓
+MotionManager
+```
 
 ---
 
