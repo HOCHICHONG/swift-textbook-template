@@ -649,7 +649,10 @@ class ActivityTracker: NSObject, CLLocationManagerDelegate {
 
 **何をしているか：**
 
+iPhone のモーションセンサーを使って歩数・距離・階段昇降などを取得
+
 **なぜこう書くのか：**
+
 
 **もしこう書かなかったら：**
 
