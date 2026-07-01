@@ -123,7 +123,6 @@ Gesture判定
 
 **自分の理解：**
 
-
 .simultaneousGesture は **「同じタッチ入力を複数のGestureに共有する仕組み」**です。
 
 ### Q3
@@ -132,9 +131,48 @@ Gesture判定
 
 **AIの回答の要点：**
 
+.onChanged → ジェスチャーが進行中の変化を毎回受け取る
+
+.onEnded → ジェスチャーが終了した瞬間に最終結果を受け取る
+
+
+例：DragGesture
+```
+指を置く
+ |
+ v
+Gesture開始
+ |
+ v
+onChanged
+ |
+ |  offset更新
+ |
+ v
+onChanged
+ |
+ |  offset更新
+ |
+ v
+指を離す
+ |
+ v
+onEnded
+ |
+ |  lastOffsetへ保存
+ |
+ v
+次の操作へ
+```
+SwiftUI はこの状態変化を通知します。
+
 **自分の理解：**
 
 （質問は何個でも追加してください。多ければ多いほど良いです。）
+
+onChanged は「今この瞬間の操作を画面へ反映する場所」
+
+onEnded は「次回操作のために状態を確定する場所」
 
 ## 今日の質問を振り返って
 
