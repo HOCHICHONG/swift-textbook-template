@@ -128,7 +128,7 @@ Gesture判定
 
 ### Q3
 
-**質問： OnChange と　OnEnable　の　状態観察仕組みを詳しく知りたい**
+**質問： OnChange と　OnEnded の　状態観察仕組みを詳しく知りたい**
 
 **AIの回答の要点：**
 
