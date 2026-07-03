@@ -135,10 +135,43 @@ struct QuoteProvider: TimelineProvider {
             quote: Quote(id: 0, text: "読み込み中...", author: "")
         )
     }
+
+    // スナップショット（ウィジェットギャラリーでのプレビュー）
+    func getSnapshot(in context: Context, completion: @escaping (QuoteEntry) -> Void) {
+        let entry = QuoteEntry(
+            date: Date(),
+            quote: QuoteStore.todaysQuote()
+        )
+        completion(entry)
+    }
+
+//  タイムライン（実際のウィジェット更新スケジュール）
+    func getTimeline(in context: Context, completion: @escaping (Timeline<QuoteEntry>) -> Void) {
+        let currentDate = Date()
+        let quote = QuoteStore.todaysQuote()
+        let entry = QuoteEntry(date: currentDate, quote: quote)
+
+      //   次の日の0時にウィジェットを更新
+        let tomorrow = Calendar.current.startOfDay(
+            for: Calendar.current.date(byAdding: .day, value: 1, to: currentDate)!
+        )
+
+        let timeline = Timeline(entries: [entry], policy: .after(tomorrow))
+        completion(timeline)
+    }
+}
 ```
 
 **何をしているか：**
 （この部分が果たしている役割を説明する）
+
+TimelineProviderを採用する場合は、この3つを実装しないとコンパイルエラーになります。
+
+1.placeholder
+
+2.getSnapshot
+
+3.
 
 TimelineProviderは**「ウィジェットのスケジュール管理者」**です。
 
@@ -176,6 +209,10 @@ TimelineProviderは**「ウィジェットのスケジュール管理者」**で
 **なぜこう書くのか：**
 （別の書き方ではなく、この書き方が選ばれている理由を説明する）
 
+1.placeholder()
+
+
+
 **もしこう書かなかったら：**
 （この部分を省略したり変えたりすると何が起きるか。実際に試した結果があればここに書く）
 
@@ -184,10 +221,6 @@ TimelineProviderは**「ウィジェットのスケジュール管理者」**で
 ### TimelineEntryとウィジェットビュー
 
 ```swift
-// 該当部分のコードを抜粋して貼る
-import WidgetKit
-import SwiftUI
-
  //MARK: - タイムラインエントリ
 
 struct QuoteEntry: TimelineEntry {
@@ -195,31 +228,6 @@ struct QuoteEntry: TimelineEntry {
     let quote: Quote
 }
 
- 
-    // スナップショット（ウィジェットギャラリーでのプレビュー）
-    func getSnapshot(in context: Context, completion: @escaping (QuoteEntry) -> Void) {
-        let entry = QuoteEntry(
-            date: Date(),
-            quote: QuoteStore.todaysQuote()
-        )
-        completion(entry)
-    }
-
-   //  タイムライン（実際のウィジェット更新スケジュール）
-    func getTimeline(in context: Context, completion: @escaping (Timeline<QuoteEntry>) -> Void) {
-        let currentDate = Date()
-        let quote = QuoteStore.todaysQuote()
-        let entry = QuoteEntry(date: currentDate, quote: quote)
-
-      //   次の日の0時にウィジェットを更新
-        let tomorrow = Calendar.current.startOfDay(
-            for: Calendar.current.date(byAdding: .day, value: 1, to: currentDate)!
-        )
-
-        let timeline = Timeline(entries: [entry], policy: .after(tomorrow))
-        completion(timeline)
-    }
-}
 ```
 
 **何をしているか：**
