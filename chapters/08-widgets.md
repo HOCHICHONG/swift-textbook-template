@@ -140,6 +140,39 @@ struct QuoteProvider: TimelineProvider {
 **何をしているか：**
 （この部分が果たしている役割を説明する）
 
+TimelineProviderは**「ウィジェットのスケジュール管理者」**です。
+
+「何を表示するか（QuoteEntry）」と「いつ更新するか（Timelineとpolicy）」を決めてWidgetKitに渡し、WidgetKitがその予定に従ってホーム画面のウィジェットを表示・更新します。
+
+仕組みとしてはこんな感じ:
+```
+ホーム画面
+      │
+      ▼
+ WidgetKit
+      │
+      ▼
+ QuoteProvider
+      │
+      ├── placeholder()
+      │      ↓
+      │   読み込み中
+      │
+      ├── getSnapshot()
+      │      ↓
+      │   見本を1枚作る
+      │
+      └── getTimeline()
+             │
+             ├── 今日の名言取得
+             ├── Entry作成
+             ├── 更新時刻を設定
+             └── Timelineを返す
+                    │
+                    ▼
+              WidgetKitが表示・更新
+```
+
 **なぜこう書くのか：**
 （別の書き方ではなく、この書き方が選ばれている理由を説明する）
 
