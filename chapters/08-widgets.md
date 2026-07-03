@@ -77,6 +77,8 @@ struct ContentView: View {
 
 （アプリの動作を自分の言葉で説明する。スクリーンショットを貼ってもよい。）
 
+<img width="314" height="684" alt="Image" src="https://github.com/user-attachments/assets/b0610848-883c-495d-9695-8b64cb6d3a63" />
+
 ## コードの詳細解説
 
 ### TimelineProviderの仕組み
