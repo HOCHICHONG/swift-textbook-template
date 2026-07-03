@@ -73,6 +73,8 @@ struct ContentView: View {
 
 **このアプリは何をするものか：**
 
+簡単に言えば、今日の名言と名言一覧を表示するアプリ
+
 （アプリの動作を自分の言葉で説明する。スクリーンショットを貼ってもよい。）
 
 ## コードの詳細解説
@@ -81,6 +83,16 @@ struct ContentView: View {
 
 ```swift
 // 該当部分のコードを抜粋して貼る
+//MARK: - タイムラインプロバイダ
+
+struct QuoteProvider: TimelineProvider {
+   //  プレースホルダー（読み込み中の仮表示）
+    func placeholder(in context: Context) -> QuoteEntry {
+        QuoteEntry(
+            date: Date(),
+            quote: Quote(id: 0, text: "読み込み中...", author: "")
+        )
+    }
 ```
 
 **何をしているか：**
@@ -108,17 +120,7 @@ struct QuoteEntry: TimelineEntry {
     let quote: Quote
 }
 
- //MARK: - タイムラインプロバイダ
-
-struct QuoteProvider: TimelineProvider {
-   //  プレースホルダー（読み込み中の仮表示）
-    func placeholder(in context: Context) -> QuoteEntry {
-        QuoteEntry(
-            date: Date(),
-            quote: Quote(id: 0, text: "読み込み中...", author: "")
-        )
-    }
-
+ 
     // スナップショット（ウィジェットギャラリーでのプレビュー）
     func getSnapshot(in context: Context, completion: @escaping (QuoteEntry) -> Void) {
         let entry = QuoteEntry(
@@ -143,7 +145,20 @@ struct QuoteProvider: TimelineProvider {
         completion(timeline)
     }
 }
+```
 
+**何をしているか：**
+
+**なぜこう書くのか：**
+
+**もしこう書かなかったら：**
+
+---
+
+### ウィジェットサイズごとのレイアウト
+
+```swift
+// 該当部分のコードを抜粋して貼る
  //MARK: - ウィジェットのビュー
 
 struct QuoteWidgetEntryView: View {
@@ -208,6 +223,20 @@ struct QuoteWidgetEntryView: View {
     }
 }
 
+```
+
+**何をしているか：**
+
+**なぜこう書くのか：**
+
+**もしこう書かなかったら：**
+
+---
+
+### メインアプリとの連携
+
+```swift
+// 該当部分のコードを抜粋して貼る
 // MARK: - ウィジェット定義
 
 @main
@@ -232,36 +261,6 @@ struct QuoteWidget: Widget {
 } timeline: {
     QuoteEntry(date: .now, quote: QuoteStore.todaysQuote())
 }
-
-
-```
-
-**何をしているか：**
-
-**なぜこう書くのか：**
-
-**もしこう書かなかったら：**
-
----
-
-### ウィジェットサイズごとのレイアウト
-
-```swift
-// 該当部分のコードを抜粋して貼る
-```
-
-**何をしているか：**
-
-**なぜこう書くのか：**
-
-**もしこう書かなかったら：**
-
----
-
-### メインアプリとの連携
-
-```swift
-// 該当部分のコードを抜粋して貼る
 ```
 
 **何をしているか：**
