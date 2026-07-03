@@ -81,6 +81,46 @@ struct ContentView: View {
 
 ## コードの詳細解説
 
+このコードはデータ管理クラスQuoteStoreから今日の名言を呼び出し表示する
+```
+let todaysQuote = QuoteStore.todaysQuote()
+```
+```
+QuoteStore
+   │
+   ├─ 名言1
+   ├─ 名言2
+   ├─ 名言3
+   │
+   └─ todaysQuote()
+          ↓
+      今日の名言
+```
+
+全体のイメージはこのように
+```
+ContentView
+│
+├── QuoteStoreから今日の名言を取得
+│
+├── QuoteStoreから全名言を取得
+│
+└── NavigationStack
+      │
+      └── VStack
+            │
+            ├── 今日の名言カード
+            │      ├─ タイトル
+            │      ├─ 名言
+            │      └─ 作者
+            │
+            └── List
+                  ├─ 名言①
+                  ├─ 名言②
+                  ├─ 名言③
+                  └─ …
+```
+
 ### TimelineProviderの仕組み
 
 ```swift
