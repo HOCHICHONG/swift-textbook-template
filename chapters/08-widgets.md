@@ -78,6 +78,7 @@ struct ContentView: View {
 （アプリの動作を自分の言葉で説明する。スクリーンショットを貼ってもよい。）
 
 <img width="314" height="684" alt="Image" src="https://github.com/user-attachments/assets/b0610848-883c-495d-9695-8b64cb6d3a63" />
+<img width="321" height="674" alt="Image" src="https://github.com/user-attachments/assets/859b6be9-37c8-480a-ad2c-69c066d05850" />
 
 ## コードの詳細解説
 
