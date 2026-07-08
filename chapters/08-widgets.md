@@ -300,23 +300,7 @@ struct QuoteEntry: TimelineEntry {
     let quote: Quote
 }
 
-```
-
-
-
-**何をしているか：**
-
-**なぜこう書くのか：**
-
-**もしこう書かなかったら：**
-
----
-
-### ウィジェットサイズごとのレイアウト
-
-```swift
-// 該当部分のコードを抜粋して貼る
- //MARK: - ウィジェットのビュー
+//MARK: - ウィジェットのビュー
 
 struct QuoteWidgetEntryView: View {
     var entry: QuoteProvider.Entry
@@ -333,6 +317,24 @@ struct QuoteWidgetEntryView: View {
         }
     }
 
+
+```
+
+
+
+**何をしているか：**
+
+**なぜこう書くのか：**
+
+**もしこう書かなかったら：**
+
+---
+
+### ウィジェットサイズごとのレイアウト
+
+```swift
+// 該当部分のコードを抜粋して貼る
+ 
     // 小サイズ
     var smallWidget: some View {
         VStack(spacing: 4) {
