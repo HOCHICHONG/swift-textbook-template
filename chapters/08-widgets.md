@@ -352,11 +352,59 @@ QuoteEntry
 
 2.TimelineEntryとは?
 
-「このデータはタイムラインで使うデータですよ」という約束（プロトコル）です。
 
+・「このデータはタイムラインで使うデータですよ」という約束（プロトコル）です。
+
+
+3.QuoteWidgetEntryView
+
+・やっていることの流れ：
+```
+QuoteProvider
+
+↓
+「今日の名言はこちらです！」
+↓
+QuoteEntry
+・日付
+・名言
+↓
+QuoteWidgetEntryView
+↓
+画面に表示
+```
+
+Viewの流れ：
+```
+QuoteProvider
+      │
+      │ 今日の名言を取得
+      ▼
+QuoteEntry
+（日付＋名言）
+      │
+      ▼
+QuoteWidgetEntryView
+      │
+      ├── family = systemSmall
+      │         │
+      │         ▼
+      │    smallWidget
+      │
+      └── family = systemMedium
+                │
+                ▼
+           mediumWidget
+```
 
 
 **もしこう書かなかったら：**
+
+1.QuoteEntryにlet date: Dateをつけないとどうなる？
+
+・TimelineEntryというプロトコルを使用しているので、それをつけないとエラーになる。
+
+
 
 ---
 
