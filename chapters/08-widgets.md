@@ -327,6 +327,31 @@ struct QuoteWidgetEntryView: View {
 
 **なぜこう書くのか：**
 
+1.QuoteEntryとは？
+```
+struct QuoteEntry: TimelineEntry {
+    let date: Date
+    let quote: Quote
+}
+```
+・ウィジェットが1回表示するために必要なデータをまとめた箱です。
+
+例えば今日が7月8日なら、この箱の中身は
+```
+QuoteEntry
+├── date
+│     2026/7/8
+│
+└── quote
+      ├── text
+      │     努力は才能を超える
+      │
+      └── author
+            イチロー
+```
+
+
+
 **もしこう書かなかったら：**
 
 ---
