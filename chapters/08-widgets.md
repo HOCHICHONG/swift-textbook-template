@@ -318,7 +318,6 @@ struct QuoteWidgetEntryView: View {
         }
     }
 
-
 ```
 
 **何をしているか：**
