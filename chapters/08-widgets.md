@@ -236,9 +236,7 @@ Snapshot スナップショット＝写真という意味です。
 今日
 
 努力は才能を超える
-
 ↓
-
 明日
 
 失敗は成功のもと
@@ -250,9 +248,7 @@ WidgetKitは
 今日表示
 
 ↓
-
 明日の0時になった
-
 ↓
 
 またgetTimeline()を呼ぶ
@@ -421,8 +417,6 @@ protocol TimelineEntry {
 ### ウィジェットサイズごとのレイアウト
 
 ```swift
-// 該当部分のコードを抜粋して貼る
- 
     // 小サイズ
     var smallWidget: some View {
         VStack(spacing: 4) {
@@ -469,12 +463,37 @@ protocol TimelineEntry {
         .padding()
     }
 }
-
 ```
 
 **何をしているか：**
 
+これはウィジェットの見た目（レイアウト）を作っているコードです
+
+流れとして：
+```
+ウィジェットサイズ
+        │
+        ▼
+switch family
+        │
+ ┌──────┴──────┐
+ │             │
+ ▼             ▼
+smallWidget   mediumWidget
+ │             │
+ ▼             ▼
+VStack        HStack
+ │             │
+ ▼             ▼
+引用マーク     引用マーク
+名言           今日の名言
+作者           名言
+               作者
+```
+
 **なぜこう書くのか：**
+
+
 
 **もしこう書かなかったら：**
 
