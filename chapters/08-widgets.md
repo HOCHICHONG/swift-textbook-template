@@ -403,6 +403,17 @@ QuoteWidgetEntryView
 
 ・TimelineEntryというプロトコルを使用しているので、それをつけないとエラーになる。
 
+→原因として、TimelineEntryというプロトコルが、「dateというプロパティを必ず持ってください」と決めているからです。
+
+・TimelineEntryのルール
+
+実際には、TimelineEntryは概ね次のようなルールを持っています。
+```
+protocol TimelineEntry {
+    var date: Date { get }
+}
+```
+つまり「dateというDate型のプロパティを必ず持ってください」という意味です。
 
 
 ---
