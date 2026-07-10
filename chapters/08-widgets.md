@@ -498,38 +498,90 @@ VStack        HStack
 ### メインアプリとの連携
 
 ```swift
-// 該当部分のコードを抜粋して貼る
-// MARK: - ウィジェット定義
+import Foundation
 
-@main
-struct QuoteWidget: Widget {
-    let kind: String = "QuoteWidget"
+// MARK: - 名言データ（アプリとウィジェットで共有）
 
-    var body: some WidgetConfiguration {
-        StaticConfiguration(kind: kind, provider: QuoteProvider()) { entry in
-            QuoteWidgetEntryView(entry: entry)
-                .containerBackground(.fill.tertiary, for: .widget)
-        }
-        .configurationDisplayName("今日の名言")
-        .description("日替わりで名言を表示します")
-        .supportedFamilies([.systemSmall, .systemMedium])
+struct Quote: Identifiable, Codable {
+    let id: Int
+    let text: String
+    let author: String
+}
+
+struct QuoteStore {
+    static let quotes: [Quote] = [
+        Quote(id: 1, text: "為せば成る、為さねば成らぬ何事も", author: "上杉鷹山"),
+        Quote(id: 2, text: "千里の道も一歩から", author: "老子"),
+        Quote(id: 3, text: "継続は力なり", author: "ことわざ"),
+        Quote(id: 4, text: "失敗は成功のもと", author: "ことわざ"),
+        Quote(id: 5, text: "知ることは愛することの始まりである", author: "ことわざ"),
+        Quote(id: 6, text: "学びて思わざれば則ち罔し", author: "孔子"),
+        Quote(id: 7, text: "過ちて改めざる、是を過ちと謂う", author: "孔子"),
+    ]
+
+    static func todaysQuote() -> Quote {
+        let dayOfYear = Calendar.current.ordinality(of: .day, in: .year, for: Date()) ?? 0
+        let index = dayOfYear % quotes.count
+        return quotes[index]
     }
 }
 
- //MARK: - プレビュー
-
-#Preview(as: .systemMedium) {
-    QuoteWidget()
-} timeline: {
-    QuoteEntry(date: .now, quote: QuoteStore.todaysQuote())
 }
 ```
 
 **何をしているか：**
 
+これは、メインアプリとウィジェットをつないでいる共通のデータです。
+
+流れとしては：
+```
+ContentView
+      │
+      ▼
+QuoteStore.todaysQuote()
+      │
+      ▼
+今日の名言を取得
+```
+
+```
+               QuoteStore.swift
+        （共通の名言データ）
+                 │
+      ┌──────────┴──────────┐
+      │                     │
+      ▼                     ▼
+ メインアプリ             ウィジェット
+ ContentView            QuoteProvider
+      │                     │
+      └──── todaysQuote() ────┘
+                 │
+                 ▼
+          同じ今日の名言
+```
+
+・アプリを開いても
+
+・ホーム画面のウィジェットを見ても
+
+**同じ「今日の名言」**が表示されます。
+
 **なぜこう書くのか：**
 
+1.Identifiable
+
+メインアプリの
+```
+List(allQuotes) { quote in
+    ...
+}
+```
+で各要素を識別するためにつける(Listは「それぞれのデータを区別するIDを教える必要がある)
+
+
 **もしこう書かなかったら：**
+
+1.IdentifiableをつけないとList(allQuotes)の部分でエラーになる
 
 ---
 
