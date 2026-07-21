@@ -664,7 +664,52 @@ struct QuoteWidget: Widget {
 ```
 このコード「今まで作った部品（Provider・View）を1つのウィジェットとしてWidgetKitに登録する」ことです。
 
+流れとしては:
+```
+ホーム画面
+↓
+WidgetKit
+↓
+QuoteWidget
+（このコード）
+↓
+uoteProvider
+（データ取得）
+↓
+QuoteEntry
+（データ）
+↓
+QuoteWidgetEntryView
+（画面）
+↓
+ホーム画面へ表示
+```
 
+もしQuoteProviderがなかったら
+
+WidgetKitは
+```
+データはあるけど…
+
+どの画面で表示するの？
+
+どんな名前なの？
+
+どのサイズに対応するの？
+```
+と分かりません。
+
+つまり、このコードは**「ウィジェットの設定書（設計図）」**です。
+
+・どのデータを使うか → QuoteProvider
+
+・どの画面で表示するか → QuoteWidgetEntryView
+
+・ウィジェットの名前は何か → configurationDisplayName
+
+・説明文は何か → description
+
+・どのサイズに対応するか → supportedFamilies
 
 ## 新しく学んだSwiftの文法・API
 
