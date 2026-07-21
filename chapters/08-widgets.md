@@ -645,6 +645,27 @@ quotes[1]を取得
 
 （必要に応じてセクションを増やす）
 
+### ウィジェットの登録
+```
+@main
+struct QuoteWidget: Widget {
+    let kind: String = "QuoteWidget"
+
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: kind, provider: QuoteProvider()) { entry in
+            QuoteWidgetEntryView(entry: entry)
+                .containerBackground(.fill.tertiary, for: .widget)
+        }
+        .configurationDisplayName("今日の名言")
+        .description("日替わりで名言を表示します")
+        .supportedFamilies([.systemSmall, .systemMedium])
+    }
+}
+```
+このコード「今まで作った部品（Provider・View）を1つのウィジェットとしてWidgetKitに登録する」ことです。
+
+
+
 ## 新しく学んだSwiftの文法・API
 
 | 項目 | 説明 | 使用例 |
