@@ -797,6 +797,42 @@ NSObject は Apple の多くのフレームワークの基礎となるクラス�
 
 ```swift
 // 該当部分のコードを抜粋して貼る
+
+import CoreLocation
+
+class ActivityTracker: NSObject, CLLocationManagerDelegate {
+
+    private let locationManager = CLLocationManager()
+
+    var currentSpeed: Double = 0
+    var locations: [CLLocationCoordinate2D] = []
+
+    override init() {
+        super.init()
+
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.requestWhenInUseAuthorization()
+    }
+
+    func startTracking() {
+        locationManager.startUpdatingLocation()
+    }
+
+    func stopTracking() {
+        locationManager.stopUpdatingLocation()
+    }
+
+    func locationManager(
+        _ manager: CLLocationManager,
+        didUpdateLocations locations: [CLLocation]
+    ) {
+        guard let location = locations.last else { return }
+
+        currentSpeed = max(0, location.speed)
+        self.locations.append(location.coordinate)
+    }
+}
 ```
 
 **何をしているか：**
