@@ -837,6 +837,34 @@ class ActivityTracker: NSObject, CLLocationManagerDelegate {
 
 **何をしているか：**
 
+簡単に説明すればCoreLocationは「CLLocationManagerがGPSから位置情報を取得し、その結果をデリゲートメソッド locationManager(_:didUpdateLocations:) で受け取って利用する仕組み」です。
+
+流れとしては:
+```
+① CLLocationManager を作る
+          │
+          ▼
+② Delegate を設定する
+          │
+          ▼
+③ 位置情報の利用許可を求める
+          │
+          ▼
+④ startUpdatingLocation()
+          │
+          ▼
+⑤ GPSが現在地を取得する
+          │
+          ▼
+⑥ didUpdateLocations が自動で呼ばれる
+          │
+          ├── 速度を取得
+          └── 座標を保存
+          │
+          ▼
+⑦ stopUpdatingLocation() で取得終了
+```
+
 **なぜこう書くのか：**
 
 **もしこう書かなかったら：**
