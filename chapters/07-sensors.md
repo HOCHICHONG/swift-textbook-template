@@ -752,6 +752,45 @@ Swiftにおいては：
 
 **もしこう書かなかったら：**
 
+1.NSObjectを継承しなたっらどうなる？ 
+
+-> CLLocationManagerDelegate を正しく利用できません。
+
+原因：CLLocationManagerDelegate は Objective-C の仕組み（Delegate）を利用するプロトコルだからです。
+
+なせNSObjectが必要？
+
+CLLocationManagerは
+```
+locationManager.delegate = self
+```
+によって、「位置情報が更新されたらこのクラスに知らせる」という仕組みになっています。
+
+流れも見てみよう：
+```
+GPS
+ ↓
+CLLocationManager
+ ↓
+Delegate
+ ↓
+ActivityTracker
+```
+この Delegate の仕組みは Objective-C のランタイムを利用しているため、NSObject を継承したクラスであることが前提になっています。
+
+
+NSObject は Apple の多くのフレームワークの基礎となるクラスです。
+
+継承すると、
+
+・Delegateを使える
+
+・Objective-Cとの連携ができる
+
+・KVO（Key-Value Observing）などの機能が使える
+
+といった機能が利用できます。
+
 ---
 
 ### CoreLocationとの連携
