@@ -649,9 +649,66 @@ class ActivityTracker: NSObject, CLLocationManagerDelegate {
 
 **何をしているか：**
 
-iPhone のモーションセンサーを使って歩数・距離・階段昇降などを取得
+役割を一言でいうと、「運動データ（歩数・距離・速度・位置）を取得して管理する司令塔」です。
+
+流れとして：
+```
+ActivityTracker作成
+        │
+        ├─ CMPedometer（歩数計）を準備
+        │
+        ├─ CLLocationManager（GPS）を準備
+        │
+        ├─ GPSのDelegateを設定
+        │
+        ├─ GPSの精度を設定
+        │
+        ├─ 位置情報の使用許可を要求
+        │
+        └─ 歩数計が使えるか確認
+```
 
 **なぜこう書くのか：**
+
+まずはクラス宣言の部分から説明：
+
+1.@Observable -> 値が変化するとSwiftUIへ通知します
+
+例えば:
+```
+stepCountが変更
+      ↓
+@Observableが検知
+      ↓
+SwiftUIが再描画
+      ↓
+画面の歩数表示が更新
+```
+
+2.NSObject -> CLLocationManager はObjective-Cで作られたクラスなので、Delegateを使うには NSObject を継承する必要があります
+
+3.CLLocationManagerDelegate -> これは「位置情報が更新されたら教えてください」という約束（プロトコル⭐️）です。
+
+例えば後で
+```
+func locationManager(
+    _ manager: CLLocationManager,
+    didUpdateLocations locations: [CLLocation]
+)
+```
+を書くことで、GPSが更新されるたびにこの関数が呼ばれます。
+
+
+歩数センサーの流れ：
+```
+iPhone
+   │
+歩数センサー
+   │
+CMPedometer
+   │
+ActivityTracker
+```
 
 
 **もしこう書かなかったら：**
