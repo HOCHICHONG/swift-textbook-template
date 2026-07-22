@@ -710,6 +710,45 @@ CMPedometer
 ActivityTracker
 ```
 
+GPSに関してクラス：
+```
+private let locationManager = CLLocationManager()
+```
+イメージとして：
+```
+GPS
+ │
+CLLocationManager
+ │
+ActivityTracker
+```
+
+場所の管理:
+```
+var locations: [CLLocationCoordinate2D] = []
+```
+配列に管理する
+
+イメージとしては:
+```
+スタート
+ ↓
+A
+ ↓
+B
+ ↓
+C
+```
+Swiftにおいては：
+```
+[
+ A,
+ B,
+ C
+]
+```
+こういうイメージになります。
+
 
 **もしこう書かなかったら：**
 
