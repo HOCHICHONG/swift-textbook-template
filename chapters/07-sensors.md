@@ -867,6 +867,35 @@ class ActivityTracker: NSObject, CLLocationManagerDelegate {
 
 **なぜこう書くのか：**
 
+1.CLLocation をimport
+
+CoreLocationというフレームワークを使えるようにします。
+このフレームワークには
+```
+現在地
+緯度・経度
+速度
+高度
+```
+などを取得する機能があります。
+
+2.位置情報の取得(GPS)
+```
+private let locationManager = CLLocationManager()
+```
+```
+ActivityTracker
+      │
+      │
+      ▼
+CLLocationManager
+      │
+      ▼
+GPS
+```
+位置情報を管理するオブジェクトからGPSとやり取りして、位置情報を取得してくれます
+
+3.
 **もしこう書かなかったら：**
 
 ---
