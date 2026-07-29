@@ -895,8 +895,35 @@ GPS
 ```
 位置情報を管理するオブジェクトからGPSとやり取りして、位置情報を取得してくれます
 
-3.
 **もしこう書かなかったら：**
+
+1.NSObjectが使えなかったらどうなる？
+
+NSObject を継承しないと CLLocationManagerDelegate を正しく利用できません。
+
+→理由は、CLLocationManagerDelegate は Objective-C の仕組み（Delegate）を利用するプロトコルだからです。
+
+じゃあ何故それが必要？
+
+→CLLocationManager は
+```
+locationManager.delegate = self
+```
+によって、「位置情報が更新されたらこのクラスに知らせる」という仕組みになっています。
+
+イメージとしては:
+```
+GPS
+ ↓
+CLLocationManager
+ ↓
+Delegate
+ ↓
+ActivityTracker
+```
+この Delegate の仕組みは Objective-C のランタイムを利用しているため、NSObject を継承したクラスであることが前提になっています。
+
+結論から言うと、NSObjectが継承しないと、Delegateとして正しく認識されなかったりします。
 
 ---
 
