@@ -42,19 +42,34 @@ SwiftUIがUIKitなどのAppleの古い仕組みと連携するときによく使
 
 ### Q2
 
-**質問：**
+**質問：Coordinator の役割は何か？なぜ必要なのか？**
 
 **AIの回答の要点：**
 
-**自分の理解：**
+・Coordinator はUIKitから送られてくるイベントを受け取る役割。
+
+・UIImagePickerController は「写真を撮った」「キャンセルした」などの結果をdelegateで通知する。
+
+・Coordinator がその通知を受け取り、撮影した画像を CameraView に渡し、最後にカメラ画面を閉じる。
+
+
+**自分の理解：Coordinator はSwiftUIとUIKitの間でイベントをやり取りする仲介役。このクラスがあることで、撮影した画像を ContentView に渡して画面に表示できる。**
 
 ### Q3
 
-**質問：**
+**質問：なぜ UIViewControllerRepresentable が必要なのか？その役割は？**
 
 **AIの回答の要点：**
 
-**自分の理解：**
+・SwiftUIではUIKitの画面をそのまま表示できない。
+
+・UIViewControllerRepresentable を使うことで、UIKitの UIViewController をSwiftUIで利用できる。
+
+・makeUIViewController() で UIImagePickerController を作成し、SwiftUIの画面に表示している。
+
+・updateUIViewController() は画面更新時に呼ばれるが、このコードでは更新処理がないため空になっている。
+
+**自分の理解：SwiftUIだけではカメラを直接使えないので、UIKitとの橋渡しをしている。**
 
 （質問は何個でも追加してください。多ければ多いほど良いです。）
 
