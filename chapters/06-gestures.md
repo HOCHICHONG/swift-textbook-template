@@ -947,18 +947,20 @@ struct CombinedDemoView: View {
 |------|------|--------|
 | 例：`DragGesture` | ドラッグジェスチャーを認識するジェスチャーレコグナイザー | `.gesture(DragGesture().onChanged { ... })` |
 | 例：`MagnificationGesture` | ピンチジェスチャーで拡大・縮小を認識 | `.gesture(MagnificationGesture().onChanged { scale in ... })` |
-| | | |
-| | | |
-| | | |
+|`onTapGesture` |タップすることを認識 |`.onTapGesture {tapCount += 1backgroundColor = Color(hue: Double.random(in: 0...1),saturation: 0.7,brightness: 0.9)}`|
+|`onLongPressGesture` |長押しの動作を認識 |  `.onLongPressGesture(minimumDuration: 1.0) {isPressed = true DispatchQueue.main.asyncAfter(deadline: .now() + 1) { isPressed = false}}`|
+|`MagnifyGesture()` |ピンチ操作の検知 | `MagnifyGesture().onChanged { value in scale = lastScale * value.magnification }.onEnded { _ in lastScale = scale }`|
+| `RotateGesture()`| 画面上のビューを2本指の回転操作（ピンチ・ローテート）で回転させる|` RotateGesture() .onChanged { value in angle = lastAngle + value.rotation }.onEnded { _ in lastAngle = angle }` |
+|`.simultaneousGesture()` |複数のジェスチャーを同時に（同時に競合させずに）認識させるためのモディファイア | `.simultaneousGesture( MagnifyGesture() .onChanged { value in scale = lastScale * value.magnification }.onEnded { _ in lastScale = scale } )`|
 
 ## 自分の実験メモ
 
 （模範コードを改変して試したことを書く）
 
 **実験1：**
-- やったこと：
-- 結果：
-- わかったこと：
+- やったこと：.simultaneousGesture()を使用しなかったらどうなる
+- 結果：複数のジェスチャーを操作しようとする時、最初に認識されたジェスチャーが最優先で動く、でも他のジェスチャーの同時操作ができなくなる
+- わかったこと：.simultaneousGesture()を使用しなかったことで、ジェスチャー同士が競争し、片方しか認識されていない
 
 **実験2：**
 - やったこと：
