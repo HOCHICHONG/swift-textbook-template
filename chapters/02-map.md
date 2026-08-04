@@ -286,7 +286,7 @@ struct Landmark: Identifiable, Hashable {
 
 観光地（ランドマーク）を表すデータモデルを定義しています。Swift（特にSwiftUIやMap系アプリ）でよく使われる形です。
 
-
+---
 **なぜこう書くのか：**
 （別の書き方ではなく、この書き方が選ばれている理由を説明する）
 
@@ -298,6 +298,7 @@ struct Landmark: Identifiable, Hashable {
 
 でもアプリを再起動すると変わる可能性あり
 
+---
 ### なぜhashが必要？ ###
 
 「ハッシュ」とは？ 簡単に言うと：データから作る“識別用の数字”
@@ -309,6 +310,7 @@ struct Landmark: Identifiable, Hashable {
 普通に比較すると遅いからです。
 hash値 を比較　→ 必要なら == を使う という高速化をしています。
 
+---
 ### もしこう書かなかったら： ###
 （この部分を省略したり変えたりすると何が起きるか。実際に試した結果があればここに書く）
 
@@ -391,7 +393,7 @@ struct ContentView: View {
 SwiftUI + MapKit を使った「観光地マップ画面」
 
 機能としては：
-
+```
 ・地図表示
 
 ・ピン表示
@@ -401,7 +403,8 @@ SwiftUI + MapKit を使った「観光地マップ画面」
 ・カテゴリ絞り込み
 
 ・詳細カード表示
-
+```
+---
 **なぜこう書くのか：**
 
 ### なぜSetを使う？ ###
@@ -415,11 +418,11 @@ SwiftUI + MapKit を使った「観光地マップ画面」
 SwiftUIでは：
 
 👉 「状態が変わると画面が再描画される」
-
+---
 ### なぜBindingを使う？ ###
 
 State を他Viewと共有
-
+---
 **もしこう書かなかったら：**
 
 ### .tag(landmark)を付けないとMarker選択が動かない。
@@ -476,21 +479,16 @@ struct LandmarkCard: View {
 LandmarkCard → 選択中スポットの詳細カードを作っています
 
 流れ:
-
+```
 CategoryFilter
-
 ↓
-
 selectedCategories変更
-
 ↓
-
 ContentView更新
-
 ↓
-
 Map更新
-
+```
+---
 **なぜこう書くのか：**
 
 ###.ultraThinMaterial は背景向き
@@ -499,7 +497,7 @@ Map更新
 
 → 理由として地図を少し透かせること
 
-
+---
 **もしこう書かなかったら：**
 
 ---
@@ -556,21 +554,16 @@ struct CategoryFilter: View {
 CategoryFilter → カテゴリ選択UI
 
 流れ:
-
+```
 CategoryFilter
-
 ↓
-
 selectedCategories変更
-
 ↓
-
 ContentView更新
-
 ↓
-
 Map更新
-
+```
+---
 **なぜこう書くのか：**
 
 ```
@@ -587,7 +580,7 @@ Category は Identifiable じゃないから。
 
 \.self の意味は値そのものを識別子にする
 
-
+---
 **もしこう書かなかったら：**
 
 @Binding var selectedCategoriesに@Bindingをつけないと、変更しても親に反映されない、場所の変更が表示できなくなる。
