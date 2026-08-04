@@ -717,35 +717,52 @@ WidgetKitは
 |------|------|--------|
 | 例：`TimelineProvider` | ウィジェットを更新するタイミングとコンテンツを定義 | `struct QuoteProvider: TimelineProvider { ... }` |
 | 例：`@main` + `WidgetConfiguration` | ウィジェットのエントリーポイント | `@main struct QuoteWidget: Widget { ... }` |
-| | | |
-| | | |
-| | | |
+| `TimelineEntry` | ウィジェットに表示するデータを保持する |`struct QuoteEntry: TimelineEntry { let date: Date }`|
+| `Timeline` | 表示データと更新スケジュールを管理する |`Timeline(entries: [entry], policy: .after(tomorrow))`|
+| `StaticConfiguration` | ProviderとViewを組み合わせてウィジェットを構成する |`StaticConfiguration(kind: ..., provider: ...)`|
+| `Widget `| ウィジェット本体を定義する |`struct QuoteWidget: Widget`|
+| `@Environment(\.widgetFamily)` | ウィジェットサイズを取得する |`@Environment(\.widgetFamily) var family`|
+| `supportedFamilies()` | 対応するウィジェットサイズを指定する |`.supportedFamilies([.systemSmall, .systemMedium])`|
+| `Calendar.ordinality()` | 今年の何日目かを取得する |`Calendar.current.ordinality(of: .day, in: .year, for: Date())`|
+
 
 ## 自分の実験メモ
 
 （模範コードを改変して試したことを書く）
 
 **実験1：**
-- やったこと：
-- 結果：
-- わかったこと：
+- やったこと：let index = dayOfYear % quotes.count の % quotes.count を削除した。
+- 結果：quotes[365] のような範囲外アクセスになり、実行時エラー（Index out of range）が発生した。
+- わかったこと：%を使うことでインデックスを配列の範囲内に収め、安全に名言を繰り返し表示できる。
 
 **実験2：**
-- やったこと：
-- 結果：
-- わかったこと：
+- やったこと：supportedFamilies([.systemSmall, .systemMedium]) を .systemSmall のみに変更
+- 結果：中サイズのウィジェットが追加できなくなった。
+- わかったこと：widgetFamily を使うことでサイズごとにレイアウトを切り替えられる。
 
 ## AIに聞いて特に理解が深まった質問 TOP3
 
-1. **質問：**
-   **得られた理解：**
+1. **質問：TimelineProviderにはなぜ3つのメソッドが必要なのか？**
 
-2. **質問：**
-   **得られた理解：**
+   **得られた理解:
+   
+   ・placeholder()：読み込み中の仮表示
+   
+   ・getSnapshot()：プレビュー・ウィジェット一覧用
+   
+   ・getTimeline()：ホーム画面用のデータと更新スケジュール
+   
+   WidgetKitが状況によって呼び分けているため、それぞれ役割が異なる
+   **
 
-3. **質問：**
-   **得られた理解：**
+2. **質問：let index = dayOfYear % quotes.count の役割は何か？**
+   **得られた理解：%は余りを求める演算子で、インデックスを0〜quotes.count - 1に収める役割がある。これにより配列の範囲外アクセスを防ぎ、名言を安全に繰り返し表示できる。**
+
+3. **質問：@mainの役割は何か？メインアプリとの連携なのか？**
+   **得られた理解：@mainはウィジェットの開始地点（エントリーポイント）を示すだけで、メインアプリとの連携を行うものではない。アプリとウィジェットが同じデータを利用できるのは、QuoteStore.swiftを両方のTarget Membershipに追加して共有しているためである。**
 
 ## この章のまとめ
+
+SwiftUIとWidgetKitを使って、日替わりで名言を表示するウィジェット付きアプリ
 
 （この章で学んだ最も重要なことを、未来の自分が読み返したときに役立つように書く）
