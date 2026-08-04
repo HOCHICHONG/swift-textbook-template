@@ -607,35 +607,78 @@ id: \.selfを書かないと、ForEach がCategoryを識別できない
 |------|------|--------|
 | 例：`Map` | SwiftUIで地図を表示するビューコンポーネント | `Map(position: .constant(.region(region)))` |
 | 例：`Marker` | 地図上に位置をマーキングするコンポーネント | `Marker("名前", coordinate: coordinate)` |
-| | | |
-| | | |
-| | | |
+| `@State` | View内で状態を管理するプロパティラッパー。値が変わると画面が自動更新される。 | `@State private var selectedLandmark: Landmark?` |
+| `@Binding` | 親ViewのStateを子Viewから参照・更新する仕組み。 | `@Binding var selectedCategories: Set<Landmark.Category>` |
+| `Map` | SwiftUIで地図を表示するコンポーネント。 | `Map(position: $cameraPosition, selection: $selectedLandmark)` |
+| `Marker` | 地図上にランドマークを表示する。 | `Marker(...)` |
+| `.tag()` | Markerと選択状態を関連付ける。 | `.tag(landmark)` |
+| `MapCameraPosition` | 地図の表示位置やズームを管理する。 | `.region(MKCoordinateRegion(...))` |
+| `ForEach` | 配列のデータを繰り返し表示する。 | `ForEach(filteredLandmarks)` |
+| `Set` | 重複しない要素を保持し、高速検索ができる。 | `Set(Landmark.Category.allCases)` |
+| `.filter()` | 条件に一致したデータだけを取得する。 | `.filter { selectedCategories.contains($0.category) }` |
+| `Hashable` | SetやMapの選択機能で利用されるプロトコル。 | `struct Landmark: Hashable` |
+| `Identifiable` | 一意のIDを持つことを表すプロトコル。 | `struct Landmark: Identifiable` |
+| `UUID()` | 一意な識別子を生成する。 | `let id = UUID()` |
+| `.mapStyle()` | 地図の見た目を変更する。 | `.mapStyle(.standard(elevation: .realistic))` |
+| `.onMapCameraChange` | 地図の移動やズーム時に処理を実行する。 | `.onMapCameraChange { context in }` |
 
 ## 自分の実験メモ
 
 （模範コードを改変して試したことを書く）
 
-**実験1：**
-- やったこと：
-- 結果：
-- わかったこと：
+### **実験1：`@Binding` を普通の変数に変更したらどうなる？**
 
-**実験2：**
-- やったこと：
-- 結果：
-- わかったこと：
+- **やったこと**
+  - `@Binding` を `var` に変更した。
+- **結果**
+  - カテゴリボタンを押しても親ViewのStateが更新されず、地図の表示も変化しなかった。
+- **わかったこと**
+  - `@Binding` は親ViewのStateを子Viewから更新するために必要である。
 
+---
+
+### **実験2：`UUID()` を使わなかったらどうなる？**
+
+- **やったこと**
+  - `id = UUID()` を削除した。
+- **結果**
+  - `Identifiable` を満たせなくなり、`ForEach` でエラーになった。
+- **わかったこと**
+  - `UUID()` は各ランドマークを一意に識別するためのIDを生成している。
+
+
+### **実験3：`Set` を `Array` に変更したらどうなる？**
+
+- **やったこと**
+  - `selectedCategories` を `[Category]` に変更した。
+- **結果**
+  - 重複したカテゴリが入る可能性があり、追加・削除の処理も複雑になった。
+- **わかったこと**
+  - ON/OFF管理には `Set` が適している。
+
+    
+---
 ## AIに聞いて特に理解が深まった質問 TOP3
 
-1. **質問：**
-   **得られた理解：**
+### **1. `@Binding` はなぜ必要なのか？**
 
-2. **質問：**
-   **得られた理解：**
+**得られた理解**
 
-3. **質問：**
-   **得られた理解：**
+`@Binding` は親Viewが持つ `@State` を子Viewでも共有して更新するための仕組みである。子Viewで変更した内容が親Viewにも反映され、UIが自動で更新される。
+
+---
+
+### **2. `Hashable` と `UUID()` の役割は何か？**
+
+**得られた理解**
+
+`UUID()` は各データを一意に識別するIDを生成する。`Hashable` はそのIDを利用して高速な比較や検索を可能にし、Mapの選択機能や `Set` の利用にも必要となる。
+
+---
+
 
 ## この章のまとめ
+
+カテゴリで絞り込みながら観光スポットを地図上で閲覧できる
 
 （この章で学んだ最も重要なことを、未来の自分が読み返したときに役立つように書く）
