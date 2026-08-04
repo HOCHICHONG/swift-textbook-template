@@ -185,6 +185,7 @@ SwiftUIで「写真を選ぶ / カメラで撮る → 画面に表示する」�
 
 （アプリの動作を自分の言葉で説明する。スクリーンショットを貼ってもよい。）
 
+---
 ## コードの詳細解説
 
 ### PhotosPickerによる写真選択
@@ -275,6 +276,7 @@ struct ContentView: View {
 
 「画面を表示して、ユーザーが写真を選んだり撮影したりしたら、その画像を表示する」という処理をしています。
 
+---
 **なぜこう書くのか：**
 （別の書き方ではなく、この書き方が選ばれている理由を説明する）
 
@@ -296,7 +298,7 @@ fullScreenCover と isShowingCameraはセットになります。
 これがないとカメラ画面は出ません。
 
 仕組みは：
-
+```
 ボタン押す
 
 ↓
@@ -310,14 +312,15 @@ fullScreenCoverが反応
 ↓
 
 CameraView表示
-
-
+```
+---
 
 **もしこう書かなかったら：**
 （この部分を省略したり変えたりすると何が起きるか。実際に試した結果があればここに書く）
 
 1.SwiftUIは状態が変わったら画面を再描画する仕組みなので @State がないと画面更新されない。
 
+---
 2.onChange がないと写真が選ばれたことを検知できなくて、画像が表示されない。
 
 ```
@@ -355,6 +358,8 @@ CameraView表示
 
 この部分は、「選ばれた写真を実際に読み込んで、画面に表示できる形に変換する」処理です。
 
+---
+
 **なぜこう書くのか：**
 
 1.PhotosPickerItem?が重要
@@ -364,13 +369,13 @@ func loadImage(from item: PhotosPickerItem?) async
 ```
 
 ? があるので、
-
+```
 ・写真がある
 
 ・写真がない（nil）
-
+```
 両方の可能性があります。
-
+---
 2.asyncが必要
 
 時間のかかる処理をする関数、写真の読み込みはすぐ終わらないことがあるので、非同期で処理します。
@@ -378,7 +383,7 @@ func loadImage(from item: PhotosPickerItem?) async
 ```
 try await item.loadTransferable(...)
 ```
-
+---
 3.guard letが必要
 
 ```
@@ -386,10 +391,13 @@ guard let item = item else { return }
 ```
 item が nil なら処理をやめる、クラッシュを防ぐ
 
+---
+
 **もしこう書かなかったら：**
 
 1.guard letが書かなかったら、処理が始まる前にエラーの発生が防ぐことができなくなる
 
+---
 2.PhotosPickerItem?に?を付けないとデータに空のデータがはいてしまいアプリがクラッシュしてしまう可能性がある
 
 ---
@@ -426,6 +434,7 @@ struct CameraView: UIViewControllerRepresentable {
 
 ・iPhoneの標準カメラを開く機能は主にUIKitのUIImagePickerControllerが担当しています。
 
+---
 **なぜこう書くのか：**
 
 1.SwiftUIとUIKitをつなぐ役としてUIViewControllerRepresentableが必要。
@@ -449,12 +458,14 @@ struct ○○: UIViewControllerRepresentable
 ```
 ここにおいて「UIKitのViewControllerをSwiftUIに変換します」という意味です。
 
+---
 2.dismiss
 ```
 @Environment(\.dismiss) private var dismiss
 ```
 この画面を閉じるための機能
 
+---
 3.picker
 ```
 let picker = UIImagePickerController()
@@ -466,6 +477,7 @@ UIImagePickerControllerを作っています。
 
 これはApple標準のカメラ、写真選択用画面です。そしてpickerをカメラモードにする
 
+---
 4.delegate
 ```
 picker.delegate = context.coordinator
@@ -474,7 +486,7 @@ picker.delegate = context.coordinator
 
 delegate は「イベントを受け取る担当」です。かなりUIKitでよく使います。
 
-
+---
 5.makeCoordinator
 ```
 func makeCoordinator() -> Coordinator {
@@ -484,7 +496,7 @@ func makeCoordinator() -> Coordinator {
 これはイベントを受け取る担当を作る処理です。
 
 役割：
-
+```
 ・撮影完了を受け取る
 
 ・キャンセルを受け取る
@@ -492,8 +504,8 @@ func makeCoordinator() -> Coordinator {
 ・画像を渡す
 
 ・画面を閉じる
-
-
+```
+---
 
 **もしこう書かなかったら：**
 
@@ -501,8 +513,11 @@ func makeCoordinator() -> Coordinator {
 
 書かなかったらカメラ機能を使えない
 
+---
+
 2.picker作らないとカメラモードに変換できない
 
+---
 3.@Bindingを書かないと親画面（ContentView）とデータを共有することができない　→ ContentViewにも反映されない
 
 ---
@@ -561,12 +576,14 @@ ContentView に結果を渡す
 
 これはUIKitでよく必要になる親クラスです。Appleの古い仕組み（Objective-C系）と連携するために必要。
 
+---
 2.UINavigationControllerDelegate
 
 これもUIImagePickerControllerが必要とするお約束。
 
 細かくはナビゲーション管理用ですが、実際はUIImagePickerControllerを使うならセットで書くことが多いです。
 
+---
 3.func imagePickerController
 ```
 func imagePickerController(
@@ -588,6 +605,7 @@ infoは撮影結果の情報が入った辞書です
 
 などが入っています。
 
+---
 4.info[.originalImage]
 ```
 if let image = info[.originalImage] as? UIImage
@@ -596,11 +614,11 @@ if let image = info[.originalImage] as? UIImage
 
 as? UIImage →　「UIImage型として変換できる？」
 
-
+---
 **もしこう書かなかったら：**
 
 1.NSObjectを書かないとdelegateとして使えないことがあります。かなり「お約束」です。
-
+---
 2.if let 使わなければ画像がUIImage型として変換できなくてアプリが落ちる
 
 ---
@@ -609,13 +627,34 @@ as? UIImage →　「UIImage型として変換できる？」
 
 ## 新しく学んだSwiftの文法・API
 
+### SwiftUI
+
 | 項目 | 説明 | 使用例 |
-|------|------|--------|
-| 例：`PhotosPicker` | フォトライブラリから画像を選択するコンポーネント | `PhotosPicker(selection: $selectedItem, matching: .images)` |
-| 例：`UIImagePickerController` | カメラまたはフォトライブラリにアクセスするUIKitコンポーネント | `picker.sourceType = .camera` |
-| | | |
-| | | |
-| | | |
+|------|------|---------|
+| `@State` | Viewの状態を管理する | `@State private var selectedImage: Image?` |
+| `@Binding` | 親子Viewで値を共有する | `@Binding var capturedImage: UIImage?` |
+| `NavigationStack` | ナビゲーション画面を構成する | `NavigationStack { ... }` |
+| `PhotosPicker` | フォトライブラリから画像を選択する | `PhotosPicker(selection: $selectedItem, matching: .images)` |
+| `.onChange()` | 値の変化を監視する | `.onChange(of: selectedItem) { ... }` |
+| `.fullScreenCover()` | 全画面モーダルを表示する | `.fullScreenCover(isPresented: $isShowingCamera)` |
+| `@ViewBuilder` | 条件によって異なるViewを返す | `@ViewBuilder private var imageDisplayArea: some View` |
+| `Task` | 非同期処理を開始する | `Task { await loadImage(from: newItem) }` |
+| `async / await` | 非同期処理を実行・待機する | `func loadImage(...) async` / `try await item.loadTransferable(...)` |
+| `guard let` | Optionalを安全に取り出す | `guard let item = item else { return }` |
+| `if let` | Optionalの値がある場合のみ処理する | `if let image = selectedImage { ... }` |
+
+---
+
+### UIKit
+
+| 項目 | 説明 | 使用例 |
+|------|------|---------|
+| `UIViewControllerRepresentable` | UIKitのViewControllerをSwiftUIで利用する | `struct CameraView: UIViewControllerRepresentable` |
+| `UIImagePickerController` | カメラを起動する | `let picker = UIImagePickerController()` |
+| `Coordinator` | UIKitのイベントを受け取る | `func makeCoordinator() -> Coordinator` |
+| `UIImagePickerControllerDelegate` | 撮影完了・キャンセルを受け取る | `class Coordinator: NSObject, UIImagePickerControllerDelegate` |
+| `UINavigationControllerDelegate` | `UIImagePickerController`で必要なDelegate | `class Coordinator: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate` |
+| `NSObject` | UIKitと連携するための基底クラス | `class Coordinator: NSObject` |
 
 ## 自分の実験メモ
 
@@ -633,15 +672,48 @@ as? UIImage →　「UIImage型として変換できる？」
 
 ## AIに聞いて特に理解が深まった質問 TOP3
 
-1. **質問：**
-   **得られた理解：**
+### 1. Coordinatorの役割
 
-2. **質問：**
-   **得られた理解：**
+**質問**
 
-3. **質問：**
-   **得られた理解：**
+> Coordinatorは何のために必要なのか？
+
+**得られた理解**
+
+- UIKitから送られてくるイベント（撮影完了・キャンセル）を受け取る役割。
+- 撮影した画像をSwiftUIへ渡す仲介役になっている。
+
+---
+
+### 2. UIViewControllerRepresentableとは？
+
+**質問**
+
+> なぜUIViewControllerRepresentableを使うのか？
+
+**得られた理解**
+
+- SwiftUIだけではカメラを直接扱えない。
+- UIKitのViewControllerをSwiftUIで利用するための橋渡しをしている。
+
+---
+
+### 3. NSObjectとは？
+
+**質問**
+
+> NSObjectは何のために継承するのか？
+
+**得られた理解**
+
+- UIKitのDelegateとして動作するための基底クラス。
+- UIKitの仕組みと連携するための土台になっている。
+
+---
+
 
 ## この章のまとめ
+
+SwiftUIだけでなくUIKitとの連携方法も学ぶことができる
 
 （この章で学んだ最も重要なことを、未来の自分が読み返したときに役立つように書く）
