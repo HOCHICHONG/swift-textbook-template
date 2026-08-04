@@ -439,6 +439,8 @@ isPressed = false
 元に戻る 🟠
 ```
 
+<img width="348" height="726" alt="Image" src="https://github.com/user-attachments/assets/e2bb706d-c068-4626-9232-ffacb2d7a8c5" />
+
 **なぜこう書くのか：**
 （別の書き方ではなく、この書き方が選ばれている理由を説明する）
 
@@ -542,6 +544,8 @@ struct DragDemoView: View {
 ⭐️offsetとは？　→ 現在カードがどれだけ移動しているかを表す
 
 ⭐️lastOffsetとは？ → 「前回ドラッグ終了時の位置」を保存するためのもの
+
+<img width="361" height="735" alt="Image" src="https://github.com/user-attachments/assets/6fe88a56-b167-4e48-bdf7-b865df5ba794" />
 
 **なぜこう書くのか：**
 
@@ -726,6 +730,11 @@ struct RotateDemoView: View {
 
 2.2本指の操作で矢印を回転させる仕組み、そしてリセットボタンでデフォルトの位置に戻す。
 
+<img width="386" height="793" alt="Image" src="https://github.com/user-attachments/assets/827f7d06-fe20-4eb9-b28e-2dcdf94648f5" />
+
+<img width="373" height="794" alt="Image" src="https://github.com/user-attachments/assets/2c608003-6553-4178-9ad4-e196232d09ed" />
+
+
 **なぜこう書くのか：**
 
 1.状態管理
@@ -888,6 +897,8 @@ struct CombinedDemoView: View {
 **何をしているか：**
 
 操作でドラッグ・ピンチ・回転を同時に動く仕組み
+
+<img width="373" height="798" alt="Image" src="https://github.com/user-attachments/assets/028241c5-148f-4c81-b949-5bd97b6ee59e" />
 
 **なぜこう書くのか：**
 
