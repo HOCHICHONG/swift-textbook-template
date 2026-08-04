@@ -730,6 +730,8 @@ struct RotateDemoView: View {
 
 2.2本指の操作で矢印を回転させる仕組み、そしてリセットボタンでデフォルトの位置に戻す。
 
+→シミュレーターでやってみたい場合オプションキーを押しながら操作すればいい
+
 <img width="386" height="793" alt="Image" src="https://github.com/user-attachments/assets/827f7d06-fe20-4eb9-b28e-2dcdf94648f5" />
 
 <img width="373" height="794" alt="Image" src="https://github.com/user-attachments/assets/2c608003-6553-4178-9ad4-e196232d09ed" />
