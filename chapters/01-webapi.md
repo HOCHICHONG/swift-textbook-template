@@ -296,7 +296,7 @@ struct ErrorBanner: View {
 （アプリの動作を自分の言葉で説明する。スクリーンショットを貼ってもよい。）
 
 このアプリはitunesのAPIを使ってキーワード（曲名やアーティスト名など）で曲を検索ことができる、そして曲についての資料（アルバム、シングルや値段など）を表示することもできる。
-
+---
 ## コードの詳細解説
 
 ## データモデル（Codable構造体）
@@ -332,7 +332,7 @@ struct Song: Codable, Identifiable {
 
 **何をしているか：**
 ## このコードは「APIから取得した音楽データを、アプリで扱いやすい形に変換する設計」です。
-
+---
 **なぜこう書くのか：**
 ### Codableの意味 : SON ⇄ Swiftの変換を自動でやってくれる
  ・JSON → struct に変換（decode）
@@ -346,7 +346,7 @@ var id: Int { trackId }
 「この曲のIDは trackId を使います」,Identifiable をつけるとSwiftUIが「どのデータがどれか」を判断できる
 
 「毎回 trackId を返す」ようにする
-
+---
 **もしこう書かなかったら：**
 
 もしCodableを書かなかったら、JSON ⇄ struct の自動変換ができなくなる。
@@ -441,7 +441,7 @@ class MusicSearchViewModel {
 ```
  このクラスの値が変わると：画面が自動更新される（SwiftUIの仕組み）
  それぞれの役割
- 
+``` 
  ・songs → 検索結果（リスト表示）
  
  ・searchText → ユーザーが入力した文字
@@ -449,7 +449,8 @@ class MusicSearchViewModel {
  ・isLoading → ローディング表示用
  
  ・errorMessage → エラー表示用
-
+```
+---
 #エラーの定義
 ```
  enum SearchError: LocalizedError {
@@ -473,7 +474,7 @@ class MusicSearchViewModel {
     }
 ```
 ### エラーの種類をまとめて管理
-
+```
 ・種類
 
 ・URLが作れない
@@ -483,7 +484,7 @@ class MusicSearchViewModel {
 ・JSON変換失敗
 
 ・結果なし
-
+```
 ## エラーメッセージの表示
 ```
         var errorDescription: String? {
@@ -560,16 +561,16 @@ let (data, _) = try await URLSession.shared.data(from: url)
 ```
 ## サーバーにリクエスト送る、終わるまで待つ（await）
 
-
+---
 **もしこう書かなかったら：**
 ### -> guardでの入力チェックがない場合:
-
+```
 ・空文字でAPIリクエストが飛ぶ
 
 ・無駄な通信
 
 ・意図しない検索結果（全部出ることもある）
-
+```
 ### -> URLエンコードしていない場合
 
 日本語・スペースでURLが壊れる
@@ -739,14 +740,14 @@ struct SongDetailView: View {
 
 **何をしているか：**
 ユーザーの操作 → 状態更新 → UIが自動で変わる仕組み　検索成功 or エラー
-
+---
 **なぜこう書くのか：**
 -> それそれのエリアパーツを分けることでコードが管理しやすくなる
 
 -> .disabled(viewModel.searchText.isEmpty || viewModel.isLoading)で一時的にボタンを無効化によって連打を防止
 
 -> awaitで検索時の非同期処理を行う
-
+---
 **もしこう書かなかったら：**
 
 コードがぐじゃぐじゃになってメンテナンスと管理が大変
