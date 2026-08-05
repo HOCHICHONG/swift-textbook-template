@@ -767,9 +767,17 @@ struct SongDetailView: View {
 |------|------|--------|
 | 例：`Codable` | JSONデータとSwiftの構造体を相互変換するプロトコル | `struct Song: Codable { ... }` |
 | 例：`async/await` | 非同期処理を同期的に書ける構文 | `let data = try await URLSession.shared.data(from: url)` |
-| | | |
-| | | |
-| | | |
+| `@Observable` | ViewModelの状態を監視し、値が変わると画面を自動更新する | `@Observable class MusicSearchViewModel {}` |
+| `URLSession` | API通信を行う | `URLSession.shared.data(from:)` |
+| `JSONDecoder` | JSONをSwiftの構造体へ変換 | `JSONDecoder().decode()` |
+| `Identifiable` | Listでデータを識別する | `var id: Int { trackId }` |
+| `AsyncImage` | URLから画像を非同期で表示 | `AsyncImage(url: URL(...))` |
+| `NavigationStack` | 画面遷移を管理する | `NavigationStack {}` |
+| `NavigationLink` | 詳細画面へ遷移する | `NavigationLink(destination:)` |
+| `ContentUnavailableView` | データが存在しない画面を表示 | 検索前の初期画面 |
+| `ProgressView` | ローディング画面を表示 | 通信中に表示 |
+| `LocalizedError` | エラーメッセージを管理 | `enum SearchError` |
+
 
 ## 自分の実験メモ
 
@@ -782,8 +790,13 @@ struct SongDetailView: View {
 
 **実験2：**
 - やったこと：
-- 結果：
-- わかったこと：
+```
+isLoading = true
+```
+を削除して実行
+
+- 結果：通信中でもProgressViewが表示されなかった。
+- わかったこと：ローディング状態は画面更新のために必要。
 
 ## AIに聞いて特に理解が深まった質問 TOP3
 
@@ -812,10 +825,8 @@ struct SongDetailView: View {
 
    ・早期リターンしにくい
    
+## この章のまとめ 
 
-4. **質問：**
-   **得られた理解：**
-
-## この章のまとめ
+MVVMアーキテクチャを用いて、API通信・画面表示・状態管理を役割ごとに分離し、保守性の高い音楽検索アプリ
 
 （この章で学んだ最も重要なことを、未来の自分が読み返したときに役立つように書く）
