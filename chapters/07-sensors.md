@@ -935,35 +935,79 @@ ActivityTracker
 |------|------|--------|
 | 例：`CMMotionManager` | 加速度・ジャイロ・気圧などのセンサーデータを取得 | `motionManager.startDeviceMotionUpdates(to: .main) { ... }` |
 | 例：`CMPedometer` | 歩数や歩行距離をカウント | `pedometer.queryPedometerData(from: startDate, to: Date())` |
-| | | |
-| | | |
-| | | |
+| `CoreMotion` | デバイスのモーション情報を取得するフレームワーク | `import CoreMotion` |
+| `startDeviceMotionUpdates()` | デバイスの姿勢情報をリアルタイム取得 | `motionManager.startDeviceMotionUpdates(...)` |
+| `attitude.pitch` | 前後の傾きを取得 | `motion.attitude.pitch` |
+| `attitude.roll` | 左右の傾きを取得 | `motion.attitude.roll` |
+| `attitude.yaw` | 水平方向の回転を取得 | `motion.attitude.yaw` |
+| `@Observable` | 値の変更をSwiftUIへ通知 | `@Observable class MotionManager` |
+| `guard` | 条件を満たさない場合に処理を終了 | `guard isAvailable else { return }` |
+| `[weak self]` | クロージャによる循環参照を防ぐ | `{ [weak self] motion, error in ... }` |
+| `.animation()` | バブルを滑らかに移動させる | `.animation(.spring(...), value: xOffset)` |
+| `ContentUnavailableView` | 利用できない場合の画面表示 | センサー未対応時の表示 |
+
 
 ## 自分の実験メモ
 
 （模範コードを改変して試したことを書く）
 
-**実験1：**
-- やったこと：
-- 結果：
-- わかったこと：
+### **実験1**
 
-**実験2：**
 - やったこと：
-- 結果：
-- わかったこと：
+  `deviceMotionUpdateInterval` を `1.0 / 60.0` から `1.0` に変更
 
+- 結果：
+  センサー更新が1秒ごとになり、バブルの動きが非常にカクカクした。
+
+- わかったこと：
+  更新間隔が短いほど滑らかに表示されるが、その分センサー更新回数が増える。
+
+---
+
+### **実験2**
+
+- やったこと：
+  `[weak self]` を外して動作を確認
+
+- 結果：
+  動作自体は変わらなかったが、循環参照（Retain Cycle）が発生する可能性があることを学んだ。
+
+- わかったこと：
+  長時間実行されるクロージャでは `weak self` を利用してメモリリークを防ぐことが重要である。
+
+---
 ## AIに聞いて特に理解が深まった質問 TOP3
 
-1. **質問：**
-   **得られた理解：**
+### **1. `CMMotionManager` は何をしているの？**
 
-2. **質問：**
-   **得られた理解：**
+**得られた理解：**
 
-3. **質問：**
-   **得られた理解：**
+`CMMotionManager` は加速度センサー・ジャイロセンサーなどの情報をまとめて管理し、端末の姿勢情報を取得するためのクラスである。
+
+---
+
+### **2. `pitch`・`roll`・`yaw` の違いは？**
+
+**得られた理解：**
+
+- Pitch：前後の傾き
+- Roll：左右の傾き
+- Yaw：端末を水平に回転させた角度
+
+水平器では主に Pitch と Roll を利用してバブルの位置を決めている。
+
+---
+
+### **3. なぜ `[weak self]` を使うの？**
+
+**得られた理解：**
+
+クロージャが `self` を強参照すると循環参照が発生する可能性がある。
+
+`weak self` を利用することで不要になったオブジェクトが正しく解放され、メモリリークを防げる。
 
 ## この章のまとめ
+
+Core Motionを利用してiPhoneの姿勢データ（Pitch・Roll・Yaw）をリアルタイムで取得し、端末の傾きを水平器として表示する
 
 （この章で学んだ最も重要なことを、未来の自分が読み返したときに役立つように書く）
