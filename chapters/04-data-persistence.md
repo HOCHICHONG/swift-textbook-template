@@ -644,35 +644,107 @@ AppStorageにも保存
 |------|------|--------|
 | 例：`@Model` | SwiftDataでオブジェクトを永続化するためのマクロ | `@Model final class Memo { ... }` |
 | 例：`@Query` | データベースからデータを取得し、変更を自動で反映するプロパティラッパー | `@Query var memos: [Memo]` |
-| | | |
-| | | |
-| | | |
+| `@Environment(\.modelContext)` | SwiftDataの保存・削除・更新を行う | `modelContext.insert(memo)` |
+| `modelContext.insert()` | データを保存 | `modelContext.insert(memo)` |
+| `modelContext.delete()` | データを削除 | `modelContext.delete(memo)` |
+| `@AppStorage` | ユーザー設定を保存 | `@AppStorage("userName")` |
+| `@Binding` | 親画面とデータを共有 | `@Binding var userName` |
+| `@State` | View内の状態管理 | `@State private var title = ""` |
+| `.sheet()` | モーダル画面を表示 | `.sheet(isPresented: $isShowingAddSheet)` |
+| `NavigationStack` | 画面遷移を管理 | `NavigationStack { ... }` |
+| `NavigationLink` | 別画面へ遷移 | `NavigationLink(destination: MemoEditView())` |
+| `ContentUnavailableView` | データがない場合の画面表示 | `ContentUnavailableView(...)` |
+
+---
 
 ## 自分の実験メモ
 
 （模範コードを改変して試したことを書く）
 
-**実験1：**
-- やったこと：
-- 結果：
-- わかったこと：
+### 実験①
 
-**実験2：**
 - やったこと：
+  `@AppStorage` を通常の `@State` に変更
+
 - 結果：
+  アプリを終了すると設定が保存されなかった。
+
 - わかったこと：
+  `@State` は画面を表示している間だけ保持されるが、
+  `@AppStorage` はアプリを終了してもデータが保存される。
+
+---
+
+### 実験②
+
+- やったこと：
+  `modelContext.insert()` を削除して実行
+
+- 結果：
+  メモは作成されたように見えるが、一覧へ追加されなかった。
+
+- わかったこと：
+  `Memo` を作成しただけでは保存されず、
+  `modelContext.insert()` を呼び出して初めてSwiftDataへ保存される。
+
+---
+
+### 実験③
+
+- やったこと：
+  `@Query` を削除
+
+- 結果：
+  保存されているメモが一覧に表示されなくなった。
+
+- わかったこと：
+  `@Query` はSwiftDataからデータを取得し、自動で画面更新まで行ってくれる。
+
+---
+
 
 ## AIに聞いて特に理解が深まった質問 TOP3
 
-1. **質問：**
-   **得られた理解：**
+### 1. `@State` と `@Binding` の違い
 
-2. **質問：**
-   **得られた理解：**
+**質問**
 
-3. **質問：**
-   **得られた理解：**
+`@State` と `@Binding` は何が違うの？
+
+**得られた理解**
+
+- `@State` は自分のViewがデータを持つ
+- `@Binding` は親Viewのデータを借りて編集する
+
+---
+
+### 2. `@Query` は何をしているの？
+
+**質問**
+
+なぜ `@Query` を書くだけで一覧が更新されるの？
+
+**得られた理解**
+
+`@Query` はSwiftDataからデータを取得し、
+データが追加・削除・更新されると自動で画面も更新してくれる。
+
+---
+
+### 3. `@AppStorage` と `@State` の違い
+
+**質問**
+
+どちらも値を保存しているように見えるが違いは？
+
+**得られた理解**
+
+- `@State` は画面を閉じると消える
+- `@AppStorage` はUserDefaultsへ保存されるため、
+  アプリを終了しても値が保持される。
 
 ## この章のまとめ
+
+SwiftDataとAppStorageを使ったデータの永続化と、SwiftUIの状態管理を理解した
 
 （この章で学んだ最も重要なことを、未来の自分が読み返したときに役立つように書く）
