@@ -773,35 +773,120 @@ Image(uiImage:)
 |------|------|--------|
 | 例：`TabView` | 複数のビューをタブで切り替えるコンポーネント | `TabView { ... }.tabViewStyle(.page)` |
 | 例：`CLLocationManager` | GPS位置情報を取得するAPIManager | `let location = manager.location?.coordinate` |
-| | | |
-| | | |
-| | | |
+| `@Model` | SwiftDataで保存するデータモデルを定義する | `@Model class PhotoRecord { ... }` |
+| `@Query` | SwiftDataからデータを取得し、変更を自動で反映する | `@Query private var records: [PhotoRecord]` |
+| `@Environment(\.modelContext)` | SwiftDataの保存・削除・更新を行うためのコンテキストを取得する | `@Environment(\.modelContext) private var modelContext` |
+| `modelContext.insert()` | データをSwiftDataへ保存する | `modelContext.insert(record)` |
+| `modelContext.delete()` | 保存したデータを削除する | `modelContext.delete(records[index])` |
+| `PhotosPicker` | 写真ライブラリから画像を選択する | `PhotosPicker(selection: $selectedItem, matching: .images)` |
+| `loadTransferable()` | 選択した写真をDataなどの型として取得する | `try await newItem?.loadTransferable(type: Data.self)` |
+| `Annotation` | 地図上に自由なビューを配置する | `Annotation(record.title, coordinate: record.coordinate)` |
+| `Marker` | 地図上に標準のマーカーを表示する | `Marker(record.title, coordinate: record.coordinate)` |
+| `UserAnnotation()` | 現在地を地図上に表示する | `UserAnnotation()` |
+| `MapUserLocationButton()` | 現在地へ移動するボタンを表示する | `.mapControls { MapUserLocationButton() }` |
+| `sheet()` | モーダル画面を表示する | `.sheet(isPresented: $isShowingAddSheet)` |
+| `sheet(item:)` | 選択したデータを詳細画面として表示する | `.sheet(item: $selectedRecord)` |
+| `requestWhenInUseAuthorization()` | 位置情報の利用許可を要求する | `manager.requestWhenInUseAuthorization()` |
+| `startUpdatingLocation()` | 現在地の取得を開始する | `manager.startUpdatingLocation()` |
+| `Task` | 非同期処理を開始する | `Task { ... }` |
 
 ## 自分の実験メモ
 
 （模範コードを改変して試したことを書く）
 
-**実験1：**
-- やったこと：
-- 結果：
-- わかったこと：
+## 実験1
 
-**実験2：**
-- やったこと：
-- 結果：
-- わかったこと：
+**やったこと**
+
+画像を保存しないように変更
+
+**結果**
+
+写真は表示されず、タイトル・位置情報だけ保存された。
+
+**わかったこと**
+
+画像は `imageData` に保存されており、`Data` がないと写真は表示できない。
+
+---
+
+## 実験2
+
+**やったこと**
+
+`guard let location = locationManager.currentLocation`
+
+を削除して保存を試した。
+
+**結果**
+
+位置情報取得前に保存するとエラーになる。
+
+**わかったこと**
+
+現在地は Optional のため、安全に取り出す必要がある。
+
+---
+
+## 実験3
+
+**やったこと**
+
+`@Query` を削除した。
+
+**結果**
+
+保存したデータが一覧や地図に表示されなくなった。
+
+**わかったこと**
+
+`@Query` は SwiftData と画面をつなぐ役割をしている。
+
+---
+
 
 ## AIに聞いて特に理解が深まった質問 TOP3
 
-1. **質問：**
-   **得られた理解：**
+## 1. なぜ latitude と longitude を保存し、coordinate は計算プロパティなのか？
 
-2. **質問：**
-   **得られた理解：**
+**得られた理解**
 
-3. **質問：**
-   **得られた理解：**
+- SwiftDataは Double を保存する
+- MapKitは CLLocationCoordinate2D を使う
+- 表示時だけ coordinate に変換することで保存用と表示用を分けられる
+
+---
+
+## 2. 写真と位置情報はどこで連携しているのか？
+
+**得られた理解**
+
+`saveRecord()` の
+
+```swift
+let record = PhotoRecord(
+    title: title,
+    memo: memo,
+    latitude: location.latitude,
+    longitude: location.longitude,
+    imageData: selectedImageData
+)
+```
+
+で写真・位置情報・タイトル・メモを1つのデータとしてまとめて保存している。
+
+---
+
+## 3. @Query の役割は何か？
+
+**得られた理解**
+
+- SwiftDataからデータを取得する
+- データが更新されると画面も自動更新される
+- 地図・一覧のどちらも同じデータを共有できる
 
 ## この章のまとめ
+
+SwiftData・MapKit・PhotosPicker・CoreLocationを連携させ、写真・位置情報・データ保存を組み合わせた実践的なアプリです
 
 （この章で学んだ最も重要なことを、未来の自分が読み返したときに役立つように書く）
