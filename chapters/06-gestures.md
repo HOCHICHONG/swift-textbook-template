@@ -7,6 +7,8 @@
 
 （この章で扱うトピックの概要を2〜3行で書く。自分の言葉で。）
 
+**ジェスチャー操作によって値の状態観察を理解する**
+
 例：この章では、ユーザーの指の動きを検出するジェスチャー認識の方法を学ぶ。タップ・ロングプレス・ドラッグ・拡大縮小・回転など、各ジェスチャーの実装方法を学び、最終的にTinder風のスワイプUIで複数のジェスチャーを組み合わせた実装を題材にする。
 
 ## 模範コードの全体像
@@ -353,8 +355,6 @@ struct CombinedDemoView: View {
 
 **このアプリは何をするものか：**
 
-（アプリの動作を自分の言葉で説明する。スクリーンショットを貼ってもよい。）
-
 このアプリは
 ```
 タップ
@@ -365,6 +365,8 @@ struct CombinedDemoView: View {
 複数ジェスチャーの同時利用
 ```
 などを体験できるアプリです
+
+---
 
 ## コードの詳細解説
 
@@ -441,6 +443,7 @@ isPressed = false
 
 <img width="348" height="726" alt="Image" src="https://github.com/user-attachments/assets/e2bb706d-c068-4626-9232-ffacb2d7a8c5" />
 
+---
 **なぜこう書くのか：**
 （別の書き方ではなく、この書き方が選ばれている理由を説明する）
 
@@ -455,7 +458,7 @@ Text(isPressed ? "成功!" : "長押し")
 }
 ```
 
-
+---
 **もしこう書かなかったら：**
 （この部分を省略したり変えたりすると何が起きるか。実際に試した結果があればここに書く）
 
@@ -547,6 +550,7 @@ struct DragDemoView: View {
 
 <img width="361" height="735" alt="Image" src="https://github.com/user-attachments/assets/6fe88a56-b167-4e48-bdf7-b865df5ba794" />
 
+---
 **なぜこう書くのか：**
 
 1.ボタンの設計
@@ -563,7 +567,7 @@ LinearGradient(
         ↓
 ──────🔵
 ```
-
+---
 2.座標の計算
 ```
 .gesture(
@@ -592,6 +596,8 @@ LinearGradient(
 今回の移動
 ```
 
+---
+
 3.ドラッグ終了時
 ```
 .onEnded { _ in
@@ -600,10 +606,14 @@ LinearGradient(
 ```
 指を離した瞬間 → 現在位置を保存します。
 
+---
+
 4.リセットのアニメション
 ```
 withAnimation(.spring)
 ```
+
+---
 
 **もしこう書かなかったら：**
 
@@ -728,6 +738,8 @@ struct RotateDemoView: View {
 
 ⭐️2本指でつまむ → 縮小
 
+---
+
 2.2本指の操作で矢印を回転させる仕組み、そしてリセットボタンでデフォルトの位置に戻す。
 
 →シミュレーターでやってみたい場合オプションキーを押しながら操作すればいい
@@ -736,6 +748,7 @@ struct RotateDemoView: View {
 
 <img width="373" height="794" alt="Image" src="https://github.com/user-attachments/assets/2c608003-6553-4178-9ad4-e196232d09ed" />
 
+---
 
 **なぜこう書くのか：**
 
@@ -755,6 +768,8 @@ struct RotateDemoView: View {
 ```
 これによって操作後の状態をちゃんと保存できる、戻るボタンも効く
 
+---
+
 2.操作範囲を広げる仕組み
 ```
 .frame(width: 300, height: 300)
@@ -767,6 +782,8 @@ struct RotateDemoView: View {
 │         │
 └─────────┘
 ```
+
+---
 
 3.動いていると操作が終わった時の処理
 ```
@@ -795,9 +812,13 @@ struct RotateDemoView: View {
 
 ```
 
+---
+
 **もしこう書かなかったら：**
 
 1.状態管理に@Stateをつけないと状態が変更してもSwiftUIに反映されない(更新できないから)
+
+---
 
 2.onChanged と onEnded を使わない場合、ジェスチャーの途中や終了時の処理を書かないことになる(状態が反映できないから)
 
@@ -902,6 +923,8 @@ struct CombinedDemoView: View {
 
 <img width="373" height="798" alt="Image" src="https://github.com/user-attachments/assets/028241c5-148f-4c81-b949-5bd97b6ee59e" />
 
+---
+
 **なぜこう書くのか：**
 
 1.複数のジェスチャーを「同時に」効かせる仕組 『.simultaneousGesture』
@@ -926,6 +949,8 @@ struct CombinedDemoView: View {
                  +--> angle
 ```
 .simultaneousGestureによって3つの処理が並行することが可能、そして、その数に制限はない。
+
+---
 
 **もしこう書かなかったら：**
 
