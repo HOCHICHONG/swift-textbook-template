@@ -2,7 +2,7 @@
 
 > レビュー実施日：2026-04-22
 
-> レビュー対象者：HO CHI CHONG
+> レビュー対象者：田中 吾錬
 
 > 対象の章：第1章
 
@@ -33,6 +33,6 @@
 
 （GitHubのIssueとして投稿したフィードバックのURL）
 
-https://github.com/HOCHICHONG/swift-textbook-template/issues
+[https://github.com/HOCHICHONG/swift-textbook-template/issues](https://github.com/ArenTanaka/swift-textbook-template/issues/1)
 
 
