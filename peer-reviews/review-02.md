@@ -2,29 +2,18 @@
 
 > レビュー実施日：2026-05-22
 > レビュー対象者： HO CHI CHONG
-> 対象の章：第3章
+> 対象の章：第2章
 
-## 良かった点
+いいところ：
 
-（相手の教科書で参考になった点、わかりやすかった説明など）
+画像を使って機能の説明するのがすごくいいと思います。
 
-1.細かい機能について具体的かつ簡潔に纏まっている。
-2.なぜの部分をしっかり書いている。
-3.細かく分解して解説をしている。
+期待している点：
 
-## もっと知りたい点
-
-1.かなり読みやすい
-2.もう少しだけ深いところまであるといいかもしれない
-
-
-## 自分の章に取り入れたい工夫
-
-細かく簡潔に纏めている場所
-一つのブロックを分けて理解できるよに細分化する点
+もっと画像と合わせた説明が見たい、それでしたら、留学生たちも読みやすいかと思います。
 
 ## 相手のリポジトリに書いたIssueのURL
 
 （GitHubのIssueとして投稿したフィードバックのURL）
 
-https://github.com/HOCHICHONG/swift-textbook-template/issues/2
+[https://github.com/HOCHICHONG/swift-textbook-template/issues/2](https://github.com/ArenTanaka/swift-textbook-template/issues/2)
